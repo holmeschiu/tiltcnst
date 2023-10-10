@@ -45,9 +45,12 @@ def tblt_coefficients(Z: int) -> List[float]:
     return [a1, b1, a2, b2, a3, b3, c1, d1, c2, d2, c3, d3]
 
 
-def atom_potential(atom_number: int, box_size: int, pxel_size_nm: float) -> np.ndarray:
-    """Calculate the atomic potential in volt on grids. Pages 105 and 293.  Eq. (5.9).
-    Needs to check the units within the equation. 
+def atom_potential(atom_number: int, box_size: int, pxel_size_nm: float, ax_nm: float, ay_nm: float, az_nm:float) -> np.ndarray:
+    """Calculate the atomic potential in volt on grids. Pages 105 and 293.  
+    Eq. (5.9).
+    The origin is in box center.  The input atomic coordinates also need to be 
+    aligned to the box center or gravity center of the molecule.  Needs to 
+    check the units for the equation. 
 
     Args:
         a (Atom): atom object
@@ -63,7 +66,10 @@ def atom_potential(atom_number: int, box_size: int, pxel_size_nm: float) -> np.n
     for i in range(box_size):
         for j in range(box_size):
             for k in range(box_size):
-                r_ = sqrt((i-box_center)**2 + (j-box_center)**2 + (k-box_center)**2) * pxel_size_nm
+                rx_ = (i-box_center)*pxel_size_nm - ax_nm
+                ry_ = (j-box_center)*pxel_size_nm - ay_nm
+                rz_ = (k-box_center)*pxel_size_nm - az_nm
+                r_ = sqrt(rx_**2 + ry_**2 + rz_**2)
 
                 t1_1 = tbcof[0]/r_ * cmath.exp(-TWOPI*r_*cmath.sqrt(tbcof[1])) * 1e9
                 t1_2 = tbcof[2]/r_ * cmath.exp(-TWOPI*r_*cmath.sqrt(tbcof[3])) * 1e9
