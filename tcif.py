@@ -4,14 +4,13 @@
 #   1. The image is presumed to be squared. 
 #   2. Presumed the input specimen exit wave has the same dimension and pixel 
 #      size as the TCIF. 
-# 
-#
-
 
 import cmath
+import math
 import numpy as np
 import scipy as sp
 import sys
+from typing import Tuple
 
 
 def wvlength_pm(kvolt: int) -> float:
@@ -25,7 +24,7 @@ def wvlength_pm(kvolt: int) -> float:
 
 
 def aperture_inm(cutf_frequency_inm: float, imge_size: int, pxel_size_nm: float) -> np.ndarray:
-    """Objective aperture function.  A 2D mask function.  The origin is in the iamge center. 
+    """Objective aperture function.  A 2D mask function.  The origin is in the image center. 
     Args:
         cutf_frequency_inm (float): cutoff frequency in nm^-1
         imge_size (int): image size in pixels
@@ -44,7 +43,7 @@ def aperture_inm(cutf_frequency_inm: float, imge_size: int, pxel_size_nm: float)
 
     for i in range(imge_size):
         for j in range(imge_size):
-            if sqrt((i*freq_step_inm-cntr_shift_inm)**2 + (j*freq_step_inm-cntr_shift_inm)**2) < cutf_frequency_inm:
+            if math.sqrt((i*freq_step_inm-cntr_shift_inm)**2 + (j*freq_step_inm-cntr_shift_inm)**2) < cutf_frequency_inm:
                 start[i, j] = 1.0
             else:
                 start[i, j] = 0.0
@@ -68,7 +67,7 @@ def W_0(Cs_mm: float, wvlength_pm: float, df1_nm: float, df2_nm: float, beta_0_r
     """
     start = np.zeros((imge_size, imge_size), dtype=float)
 
-    freq_step_inm = (1/pxel_size) / imge_size
+    freq_step_inm = (1/pxel_size_nm) / imge_size
     cntr_shift_inm = imge_size / 2 / pxel_size_nm
     za = (df1_nm + df2_nm) / 2
     zb = (df1_nm - df2_nm) / 2
@@ -85,20 +84,22 @@ def W_0(Cs_mm: float, wvlength_pm: float, df1_nm: float, df2_nm: float, beta_0_r
 
     return start
 
-
-def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, wvlength_pm: float, imge_size: int, pxel_size_nm: float) -> (np.ndarray, np.ndarray):
-    """Calculate TCIF in Fourier space.  The origin is in the image center. 
+def calculate_spatial_frequencies(imge_size: int, pxel_size_nm: float):
+    """Calculate frequency bins using np.fft.fftfreq and scale them with the pixel size (nm^-1)
     Args:
-        spec (np.ndarray): specimen exit wave (in complex number?)
-        W_0 (np.ndarray): distorted phases in radian
-        beta_rad (float): tilt axis orientation in radian
-        alpha_rad (float): tilt angle in radian
-        wvlength_pm (float): electron wavelength in pm
-        imge_size (int): image size in pixels
-        pxel_size_nm (float): pixel size in nm
+        imge_size (int):
+        pxel_size_nm (float):
     Returns:
-        np.ndarray, np.ndarray: return Q(P) in amplitudes and phases
+        freqs
     """
+    # Frequencies in nm^-1
+    freqs = np.fft.fftfreq(imge_size, d=pxel_size_nm)  
+    # Shift frequencies to center the zero frequency
+    freqs = np.fft.fftshift(freqs)  
+    return freqs
+
+def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, wvlength_pm: float, imge_size: int, pxel_size_nm: float):
+    """Calculate TCIF in Fourier space. The origin is in the image center."""
     if (W_0.size != imge_size**2) or (spec.size != imge_size**2):
         print("The size of the phase array or the inputted exit wave does not match the image size.")
         sys.exit()
@@ -106,51 +107,64 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
     amp = np.zeros((imge_size, imge_size), dtype=float)
     phs = np.zeros((imge_size, imge_size), dtype=float)
 
-    freq_step_inm = (1/pxel_size_nm) / imge_size
-    cntr_shift_inm = imge_size / 2 / pxel_size_nm
+    # Calculate the spatial frequency grid (in nm^-1)
+    freqs = calculate_spatial_frequencies(imge_size, pxel_size_nm)
+    print('Spatial frequencies:', freqs)
 
-    # Interpolate the specimen exit wave
-    freq_map_inm = np.mgrid[-0.5:0.5:(1/imge_size), -0.5:0.5:(1/imge_size)]
-    freq_map_inm = freq_map * 1/pxel_size_nm
-    freqs = np.linspace(-0.5, 0.5, imge_size) * 1/pxel_size_nm
+    # Shifted FFT of the specimen exit wave
+    f_spec = np.fft.fftshift(np.fft.fft2(spec))  
+    # f_spec = np.fft.fft2(spec)
+    print('f_spec', f_spec)
 
-    f_spec = np.fft.fft(spec)
-    interpr = sp.interpolate.RegularGridInterpolator((freqs, freqs), f_spec.real, method='cubic', bounds_error=False, fill_value=float)
-    interpi = sp.interpolate.RegularGridInterpolator((freqs, freqs), f_spec.imag, method='cubic', bounds_error=False, fill_value=float)
+    # Ensure fill_value is compatible with the dtype of f_spec.real and f_spec.imag
+    fill_value_real = np.float64(0.0)
+    fill_value_imag = np.float64(0.0)
+
+    # Set up interpolators for real and imaginary parts of the FFT of the specimen
+    interpr = sp.interpolate.RegularGridInterpolator((freqs, freqs), f_spec.real, method='cubic', bounds_error=False, fill_value=fill_value_real)
+    interpi = sp.interpolate.RegularGridInterpolator((freqs, freqs), f_spec.imag, method='cubic', bounds_error=False, fill_value=fill_value_imag)
 
     for i in range(imge_size):
         for j in range(imge_size):
-            sx = i*freq_step_inm - cntr_shift_inm
-            sy = j*freq_step_inm - cntr_shift_inm
+            # sx and sy are now in the centered frequency grid
+            sx = freqs[i]
+            sy = freqs[j]
+            print('sx:', sx, 'sy:', sy)
             ssqu = sx**2 + sy**2
 
             pnx_inm = sx - 0.5 * cmath.cos(beta_rad) * ssqu * wvlength_pm * cmath.tan(alpha_rad) * 1e-3
+            # print('pnx_inm', pnx_inm)
             pny_inm = sy - 0.5 * cmath.sin(beta_rad) * ssqu * wvlength_pm * cmath.tan(alpha_rad) * 1e-3
+            # print('pny_inm', pny_inm)
             ppx_inm = sx + 0.5 * cmath.cos(beta_rad) * ssqu * wvlength_pm * cmath.tan(alpha_rad) * 1e-3
+            # print('ppx_inm', ppx_inm)
             ppy_inm = sy + 0.5 * cmath.sin(beta_rad) * ssqu * wvlength_pm * cmath.tan(alpha_rad) * 1e-3
+            # print('ppy_inm', ppy_inm)
 
             # Interpolation on the input exit wave
-            #     Not interpolate on phases due to the instability. 
-            #        spec(pn) -> sp_rpn + i * sp_ipn
-            #        spec(pp) -> sp_rpp + i * sp_ipp
-            sp_rpn = interpr(pnx_inm, pny_inm)
-            sp_ipn = interpi(pnx_inm, pny_inm)
-            sp_rpp = interpr(ppx_inm, ppy_inm)
-            sp_ipp = interpr(ppx_inm, ppy_inm)
+            sp_rpn = interpr((pnx_inm.real, pny_inm.real))
+            # print('sp_rpn', sp_rpn)
+            sp_ipn = interpi((pnx_inm.real, pny_inm.real))
+            # print('sp_ipn', sp_ipn)
+            sp_rpp = interpr((ppx_inm.real, ppy_inm.real))
+            # print('sp_rpp', sp_rpp)
+            sp_ipp = interpi((ppx_inm.real, ppy_inm.real))
+            # print('sp_ipp', sp_ipp)
 
+            # Apply phase modulation
             phmod_cos = cmath.cos(W_0[i, j])
             phmod_sin = cmath.sin(W_0[i, j])
-
-            Q1r =  phmod_cos * sp_rpn + phmod_sin * sp_ipn
+            
+            Q1r = phmod_cos * sp_rpn + phmod_sin * sp_ipn
             Q1i = -phmod_sin * sp_rpn + phmod_cos * sp_ipn
-            Q2r =  phmod_cos * sp_rpp - phmod_sin * sp_ipp
-            Q2i =  phmod_sin * sp_rpp + phmod_cos * sp_ipp
+            Q2r = phmod_cos * sp_rpp - phmod_sin * sp_ipp
+            Q2i = phmod_sin * sp_rpp + phmod_cos * sp_ipp
 
             Q3r = -(Q1i - Q2i)
             Q3i = (Q1r - Q2r)
 
             amp[i, j] = amp[i, j] + cmath.sqrt(Q3r**2 + Q3i**2)
-            phs[i, j] = phs[i, j] + cmath.atan(Q3i/Q3r)
+            phs[i, j] = phs[i, j] + cmath.atan(Q3i / Q3r)
 
     return amp, phs
             
@@ -164,7 +178,7 @@ def tcif_transform(amp: np.ndarray, phs: np.ndarray) -> np.ndarray:
         np.ndarray: intensities in real space
     """
     img_size = amp.shape[0]
-    decom = np.zeros((img_size, img_size), dtype=float)
+    decom = np.zeros((img_size, img_size), dtype=complex) # used to be decom = np.zeros((img_size, img_size), dtype=float)
 
     for m in range(img_size):
         for n in range(img_size):

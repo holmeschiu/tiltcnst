@@ -27,7 +27,7 @@ def tblt_coefficients(Z: int) -> List[float]:
             if line.startswith('Z'):
                 atom_number = int(line.split(',')[0][2:5])
                 if atom_number == Z:
-                    idx = index(line)
+                    idx = data.index(line)
                     a1 = float(data[idx+1].split()[0])
                     b1 = float(data[idx+1].split()[1])
                     a2 = float(data[idx+1].split()[2])
@@ -60,7 +60,8 @@ def atom_potential(atom_number: int, box_size: int, pxel_size_nm: float, ax_nm: 
         np.ndarray: atomic potential on grids
     """
     tbcof = tblt_coefficients(atom_number)
-    v_grid = np.zeros((box_size, box_size, box_size))
+    # used to be v_grid = np.zeros((box_size, box_size, box_size))
+    v_grid = np.zeros((box_size, box_size, box_size), dtype=complex)
     box_center = box_size / 2
 
     for i in range(box_size):
@@ -69,7 +70,7 @@ def atom_potential(atom_number: int, box_size: int, pxel_size_nm: float, ax_nm: 
                 rx_ = (i-box_center)*pxel_size_nm - ax_nm
                 ry_ = (j-box_center)*pxel_size_nm - ay_nm
                 rz_ = (k-box_center)*pxel_size_nm - az_nm
-                r_ = sqrt(rx_**2 + ry_**2 + rz_**2)
+                r_ = cmath.sqrt(rx_**2 + ry_**2 + rz_**2)
 
                 t1_1 = tbcof[0]/r_ * cmath.exp(-TWOPI*r_*cmath.sqrt(tbcof[1])) * 1e9
                 t1_2 = tbcof[2]/r_ * cmath.exp(-TWOPI*r_*cmath.sqrt(tbcof[3])) * 1e9
@@ -84,6 +85,3 @@ def atom_potential(atom_number: int, box_size: int, pxel_size_nm: float, ax_nm: 
                 v_grid[i, j, k] = t1 + t2
 
     return v_grid
-
-
-    

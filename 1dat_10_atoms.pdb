@@ -1,0 +1,902 @@
+HEADER    IRON STORAGE                            14-NOV-96   1DAT              
+TITLE     CUBIC CRYSTAL STRUCTURE RECOMBINANT HORSE L APOFERRITIN               
+COMPND    MOL_ID: 1;                                                            
+COMPND   2 MOLECULE: L FERRITIN;                                                
+COMPND   3 CHAIN: A;                                                            
+COMPND   4 ENGINEERED: YES                                                      
+SOURCE    MOL_ID: 1;                                                            
+SOURCE   2 ORGANISM_SCIENTIFIC: EQUUS CABALLUS;                                 
+SOURCE   3 ORGANISM_COMMON: HORSE;                                              
+SOURCE   4 ORGANISM_TAXID: 9796;                                                
+SOURCE   5 ORGAN: LIVER;                                                        
+SOURCE   6 GENE: CDNA;                                                          
+SOURCE   7 EXPRESSION_SYSTEM: ESCHERICHIA COLI;                                 
+SOURCE   8 EXPRESSION_SYSTEM_TAXID: 562;                                        
+SOURCE   9 EXPRESSION_SYSTEM_PLASMID: BMH-71-18;                                
+SOURCE  10 EXPRESSION_SYSTEM_GENE: CDNA                                         
+KEYWDS    APOFERRITIN, LIGHT CHAIN, IRON STORAGE                                
+EXPDTA    X-RAY DIFFRACTION                                                     
+AUTHOR    B.GALLOIS,T.GRANIER,B.LANGLOIS D'ESTAINTOT,R.R.CRICHTON,F.ROLAND      
+REVDAT   5   09-AUG-23 1DAT    1       REMARK LINK                              
+REVDAT   4   29-NOV-17 1DAT    1       REMARK HELIX                             
+REVDAT   3   13-JUL-11 1DAT    1       VERSN                                    
+REVDAT   2   24-FEB-09 1DAT    1       VERSN                                    
+REVDAT   1   12-MAR-97 1DAT    0                                                
+JRNL        AUTH   B.GALLOIS,B.L.DESTAINTOT,M.A.MICHAUX,A.DAUTANT,T.GRANIER,    
+JRNL        AUTH 2 G.PRECIGOUX,J.A.SORUCO,F.ROLAND,O.CHAVASALBA,A.HERBAS,       
+JRNL        AUTH 3 R.R.CRICHTON                                                 
+JRNL        TITL   X-RAY STRUCTURE OF RECOMBINANT HORSE L-CHAIN APOFERRITIN AT  
+JRNL        TITL 2 2.0 ANGSTROM RESOLUTION: IMPLICATIONS FOR STABILITY AND      
+JRNL        TITL 3 FUNCTION.                                                    
+JRNL        REF    J.BIOL.INORG.CHEM.            V.   2   360 1997              
+JRNL        REFN                   ISSN 0949-8257                               
+REMARK   1                                                                      
+REMARK   1 REFERENCE 1                                                          
+REMARK   1  AUTH   M.A.MICHAUX,A.DAUTANT,B.GALLOIS,T.GRANIER,B.L.D'ESTAINTOT,   
+REMARK   1  AUTH 2 G.PRECIGOUX                                                  
+REMARK   1  TITL   STRUCTURAL INVESTIGATION OF THE COMPLEXATION PROPERTIES      
+REMARK   1  TITL 2 BETWEEN HORSE SPLEEN APOFERRITIN AND METALLOPORPHYRINS       
+REMARK   1  REF    PROTEINS                      V.  24   314 1996              
+REMARK   1  REFN                   ISSN 0887-3585                               
+REMARK   1 REFERENCE 2                                                          
+REMARK   1  AUTH   S.TAKEDA,M.OHTA,S.EBINA,K.NAGAYAMA                           
+REMARK   1  TITL   CLONING, EXPRESSION AND CHARACTERIZATION OF HORSE L-FERRITIN 
+REMARK   1  TITL 2 IN ESCHERICHIA COLI                                          
+REMARK   1  REF    BIOCHIM.BIOPHYS.ACTA          V.1174   218 1993              
+REMARK   1  REFN                   ISSN 0006-3002                               
+REMARK   1 REFERENCE 3                                                          
+REMARK   1  AUTH   M.HEUSTERSPREUTE,R.R.CRICHTON                                
+REMARK   1  TITL   AMINO ACID SEQUENCE OF HORSE SPLEEN APOFERRITIN              
+REMARK   1  REF    FEBS LETT.                    V. 129   322 1981              
+REMARK   1  REFN                   ISSN 0014-5793                               
+REMARK   1 REFERENCE 4                                                          
+REMARK   1  AUTH   G.A.CLEGG,R.F.STANSFIELD,P.E.BOURNE,P.M.HARRISON             
+REMARK   1  TITL   HELIX PACKING AND SUBUNIT CONFORMATION IN HORSE SPLEEN       
+REMARK   1  TITL 2 APOFERRITIN                                                  
+REMARK   1  REF    NATURE                        V. 288   298 1980              
+REMARK   1  REFN                   ISSN 0028-0836                               
+REMARK   2                                                                      
+REMARK   2 RESOLUTION.    2.05 ANGSTROMS.                                       
+REMARK   3                                                                      
+REMARK   3 REFINEMENT.                                                          
+REMARK   3   PROGRAM     : X-PLOR 2.1                                           
+REMARK   3   AUTHORS     : BRUNGER                                              
+REMARK   3                                                                      
+REMARK   3  DATA USED IN REFINEMENT.                                            
+REMARK   3   RESOLUTION RANGE HIGH (ANGSTROMS) : 2.05                           
+REMARK   3   RESOLUTION RANGE LOW  (ANGSTROMS) : 8.00                           
+REMARK   3   DATA CUTOFF            (SIGMA(F)) : 4.000                          
+REMARK   3   DATA CUTOFF HIGH         (ABS(F)) : NULL                           
+REMARK   3   DATA CUTOFF LOW          (ABS(F)) : NULL                           
+REMARK   3   COMPLETENESS (WORKING+TEST)   (%) : 77.3                           
+REMARK   3   NUMBER OF REFLECTIONS             : 13018                          
+REMARK   3                                                                      
+REMARK   3  FIT TO DATA USED IN REFINEMENT.                                     
+REMARK   3   CROSS-VALIDATION METHOD          : NULL                            
+REMARK   3   FREE R VALUE TEST SET SELECTION  : NULL                            
+REMARK   3   R VALUE            (WORKING SET) : 0.178                           
+REMARK   3   FREE R VALUE                     : NULL                            
+REMARK   3   FREE R VALUE TEST SET SIZE   (%) : NULL                            
+REMARK   3   FREE R VALUE TEST SET COUNT      : NULL                            
+REMARK   3   ESTIMATED ERROR OF FREE R VALUE  : NULL                            
+REMARK   3                                                                      
+REMARK   3  FIT IN THE HIGHEST RESOLUTION BIN.                                  
+REMARK   3   TOTAL NUMBER OF BINS USED           : NULL                         
+REMARK   3   BIN RESOLUTION RANGE HIGH       (A) : 2.05                         
+REMARK   3   BIN RESOLUTION RANGE LOW        (A) : 2.15                         
+REMARK   3   BIN COMPLETENESS (WORKING+TEST) (%) : 57.50                        
+REMARK   3   REFLECTIONS IN BIN    (WORKING SET) : 1104                         
+REMARK   3   BIN R VALUE           (WORKING SET) : 0.1910                       
+REMARK   3   BIN FREE R VALUE                    : NULL                         
+REMARK   3   BIN FREE R VALUE TEST SET SIZE  (%) : NULL                         
+REMARK   3   BIN FREE R VALUE TEST SET COUNT     : NULL                         
+REMARK   3   ESTIMATED ERROR OF BIN FREE R VALUE : NULL                         
+REMARK   3                                                                      
+REMARK   3  NUMBER OF NON-HYDROGEN ATOMS USED IN REFINEMENT.                    
+REMARK   3   PROTEIN ATOMS            : 1397                                    
+REMARK   3   NUCLEIC ACID ATOMS       : 0                                       
+REMARK   3   HETEROGEN ATOMS          : 3                                       
+REMARK   3   SOLVENT ATOMS            : 106                                     
+REMARK   3                                                                      
+REMARK   3  B VALUES.                                                           
+REMARK   3   FROM WILSON PLOT           (A**2) : 15.20                          
+REMARK   3   MEAN B VALUE      (OVERALL, A**2) : 19.50                          
+REMARK   3   OVERALL ANISOTROPIC B VALUE.                                       
+REMARK   3    B11 (A**2) : NULL                                                 
+REMARK   3    B22 (A**2) : NULL                                                 
+REMARK   3    B33 (A**2) : NULL                                                 
+REMARK   3    B12 (A**2) : NULL                                                 
+REMARK   3    B13 (A**2) : NULL                                                 
+REMARK   3    B23 (A**2) : NULL                                                 
+REMARK   3                                                                      
+REMARK   3  ESTIMATED COORDINATE ERROR.                                         
+REMARK   3   ESD FROM LUZZATI PLOT        (A) : 0.20                            
+REMARK   3   ESD FROM SIGMAA              (A) : NULL                            
+REMARK   3   LOW RESOLUTION CUTOFF        (A) : NULL                            
+REMARK   3                                                                      
+REMARK   3  CROSS-VALIDATED ESTIMATED COORDINATE ERROR.                         
+REMARK   3   ESD FROM C-V LUZZATI PLOT    (A) : NULL                            
+REMARK   3   ESD FROM C-V SIGMAA          (A) : NULL                            
+REMARK   3                                                                      
+REMARK   3  RMS DEVIATIONS FROM IDEAL VALUES.                                   
+REMARK   3   BOND LENGTHS                 (A) : 0.013                           
+REMARK   3   BOND ANGLES            (DEGREES) : 2.700                           
+REMARK   3   DIHEDRAL ANGLES        (DEGREES) : 19.80                           
+REMARK   3   IMPROPER ANGLES        (DEGREES) : 1.210                           
+REMARK   3                                                                      
+REMARK   3  ISOTROPIC THERMAL MODEL : NULL                                      
+REMARK   3                                                                      
+REMARK   3  ISOTROPIC THERMAL FACTOR RESTRAINTS.    RMS    SIGMA                
+REMARK   3   MAIN-CHAIN BOND              (A**2) : NULL  ; NULL                 
+REMARK   3   MAIN-CHAIN ANGLE             (A**2) : NULL  ; NULL                 
+REMARK   3   SIDE-CHAIN BOND              (A**2) : NULL  ; NULL                 
+REMARK   3   SIDE-CHAIN ANGLE             (A**2) : NULL  ; NULL                 
+REMARK   3                                                                      
+REMARK   3  NCS MODEL : NULL                                                    
+REMARK   3                                                                      
+REMARK   3  NCS RESTRAINTS.                         RMS   SIGMA/WEIGHT          
+REMARK   3   GROUP  1  POSITIONAL            (A) : NULL  ; NULL                 
+REMARK   3   GROUP  1  B-FACTOR           (A**2) : NULL  ; NULL                 
+REMARK   3                                                                      
+REMARK   3  PARAMETER FILE  1  : NULL                                           
+REMARK   3  TOPOLOGY FILE  1   : NULL                                           
+REMARK   3                                                                      
+REMARK   3  OTHER REFINEMENT REMARKS: NULL                                      
+REMARK   4                                                                      
+REMARK   4 1DAT COMPLIES WITH FORMAT V. 3.30, 13-JUL-11                         
+REMARK 100                                                                      
+REMARK 100 THIS ENTRY HAS BEEN PROCESSED BY BNL.                                
+REMARK 100 THE DEPOSITION ID IS D_1000172715.                                   
+REMARK 200                                                                      
+REMARK 200 EXPERIMENTAL DETAILS                                                 
+REMARK 200  EXPERIMENT TYPE                : X-RAY DIFFRACTION                  
+REMARK 200  DATE OF DATA COLLECTION        : 02-JUN-95                          
+REMARK 200  TEMPERATURE           (KELVIN) : 293                                
+REMARK 200  PH                             : NULL                               
+REMARK 200  NUMBER OF CRYSTALS USED        : 1                                  
+REMARK 200                                                                      
+REMARK 200  SYNCHROTRON              (Y/N) : Y                                  
+REMARK 200  RADIATION SOURCE               : LURE                               
+REMARK 200  BEAMLINE                       : D41A                               
+REMARK 200  X-RAY GENERATOR MODEL          : NULL                               
+REMARK 200  MONOCHROMATIC OR LAUE    (M/L) : M                                  
+REMARK 200  WAVELENGTH OR RANGE        (A) : 1.375                              
+REMARK 200  MONOCHROMATOR                  : NULL                               
+REMARK 200  OPTICS                         : NULL                               
+REMARK 200                                                                      
+REMARK 200  DETECTOR TYPE                  : IMAGE PLATE                        
+REMARK 200  DETECTOR MANUFACTURER          : MARRESEARCH                        
+REMARK 200  INTENSITY-INTEGRATION SOFTWARE : MOSFLM                             
+REMARK 200  DATA SCALING SOFTWARE          : CCP4 (AGROVATA, ROTAVATA           
+REMARK 200                                                                      
+REMARK 200  NUMBER OF UNIQUE REFLECTIONS   : 16993                              
+REMARK 200  RESOLUTION RANGE HIGH      (A) : 2.050                              
+REMARK 200  RESOLUTION RANGE LOW       (A) : 16.050                             
+REMARK 200  REJECTION CRITERIA  (SIGMA(I)) : 1.000                              
+REMARK 200                                                                      
+REMARK 200 OVERALL.                                                             
+REMARK 200  COMPLETENESS FOR RANGE     (%) : 99.6                               
+REMARK 200  DATA REDUNDANCY                : 10.60                              
+REMARK 200  R MERGE                    (I) : NULL                               
+REMARK 200  R SYM                      (I) : 0.09600                            
+REMARK 200  <I/SIGMA(I)> FOR THE DATA SET  : 6.4000                             
+REMARK 200                                                                      
+REMARK 200 IN THE HIGHEST RESOLUTION SHELL.                                     
+REMARK 200  HIGHEST RESOLUTION SHELL, RANGE HIGH (A) : 2.05                     
+REMARK 200  HIGHEST RESOLUTION SHELL, RANGE LOW  (A) : 2.17                     
+REMARK 200  COMPLETENESS FOR SHELL     (%) : 99.6                               
+REMARK 200  DATA REDUNDANCY IN SHELL       : 9.30                               
+REMARK 200  R MERGE FOR SHELL          (I) : NULL                               
+REMARK 200  R SYM FOR SHELL            (I) : 0.27800                            
+REMARK 200  <I/SIGMA(I)> FOR SHELL         : 2.700                              
+REMARK 200                                                                      
+REMARK 200 DIFFRACTION PROTOCOL: NULL                                           
+REMARK 200 METHOD USED TO DETERMINE THE STRUCTURE: NULL                         
+REMARK 200 SOFTWARE USED: X-PLOR 2.1                                            
+REMARK 200 STARTING MODEL: PDB ENTRY 1IER                                       
+REMARK 200                                                                      
+REMARK 200 REMARK: NULL                                                         
+REMARK 280                                                                      
+REMARK 280 CRYSTAL                                                              
+REMARK 280 SOLVENT CONTENT, VS   (%): 62.20                                     
+REMARK 280 MATTHEWS COEFFICIENT, VM (ANGSTROMS**3/DA): 3.26                     
+REMARK 280                                                                      
+REMARK 280 CRYSTALLIZATION CONDITIONS: NULL                                     
+REMARK 290                                                                      
+REMARK 290 CRYSTALLOGRAPHIC SYMMETRY                                            
+REMARK 290 SYMMETRY OPERATORS FOR SPACE GROUP: F 4 3 2                          
+REMARK 290                                                                      
+REMARK 290      SYMOP   SYMMETRY                                                
+REMARK 290     NNNMMM   OPERATOR                                                
+REMARK 290       1555   X,Y,Z                                                   
+REMARK 290       2555   -X,-Y,Z                                                 
+REMARK 290       3555   -X,Y,-Z                                                 
+REMARK 290       4555   X,-Y,-Z                                                 
+REMARK 290       5555   Z,X,Y                                                   
+REMARK 290       6555   Z,-X,-Y                                                 
+REMARK 290       7555   -Z,-X,Y                                                 
+REMARK 290       8555   -Z,X,-Y                                                 
+REMARK 290       9555   Y,Z,X                                                   
+REMARK 290      10555   -Y,Z,-X                                                 
+REMARK 290      11555   Y,-Z,-X                                                 
+REMARK 290      12555   -Y,-Z,X                                                 
+REMARK 290      13555   Y,X,-Z                                                  
+REMARK 290      14555   -Y,-X,-Z                                                
+REMARK 290      15555   Y,-X,Z                                                  
+REMARK 290      16555   -Y,X,Z                                                  
+REMARK 290      17555   X,Z,-Y                                                  
+REMARK 290      18555   -X,Z,Y                                                  
+REMARK 290      19555   -X,-Z,-Y                                                
+REMARK 290      20555   X,-Z,Y                                                  
+REMARK 290      21555   Z,Y,-X                                                  
+REMARK 290      22555   Z,-Y,X                                                  
+REMARK 290      23555   -Z,Y,X                                                  
+REMARK 290      24555   -Z,-Y,-X                                                
+REMARK 290      25555   X,Y+1/2,Z+1/2                                           
+REMARK 290      26555   -X,-Y+1/2,Z+1/2                                         
+REMARK 290      27555   -X,Y+1/2,-Z+1/2                                         
+REMARK 290      28555   X,-Y+1/2,-Z+1/2                                         
+REMARK 290      29555   Z,X+1/2,Y+1/2                                           
+REMARK 290      30555   Z,-X+1/2,-Y+1/2                                         
+REMARK 290      31555   -Z,-X+1/2,Y+1/2                                         
+REMARK 290      32555   -Z,X+1/2,-Y+1/2                                         
+REMARK 290      33555   Y,Z+1/2,X+1/2                                           
+REMARK 290      34555   -Y,Z+1/2,-X+1/2                                         
+REMARK 290      35555   Y,-Z+1/2,-X+1/2                                         
+REMARK 290      36555   -Y,-Z+1/2,X+1/2                                         
+REMARK 290      37555   Y,X+1/2,-Z+1/2                                          
+REMARK 290      38555   -Y,-X+1/2,-Z+1/2                                        
+REMARK 290      39555   Y,-X+1/2,Z+1/2                                          
+REMARK 290      40555   -Y,X+1/2,Z+1/2                                          
+REMARK 290      41555   X,Z+1/2,-Y+1/2                                          
+REMARK 290      42555   -X,Z+1/2,Y+1/2                                          
+REMARK 290      43555   -X,-Z+1/2,-Y+1/2                                        
+REMARK 290      44555   X,-Z+1/2,Y+1/2                                          
+REMARK 290      45555   Z,Y+1/2,-X+1/2                                          
+REMARK 290      46555   Z,-Y+1/2,X+1/2                                          
+REMARK 290      47555   -Z,Y+1/2,X+1/2                                          
+REMARK 290      48555   -Z,-Y+1/2,-X+1/2                                        
+REMARK 290      49555   X+1/2,Y,Z+1/2                                           
+REMARK 290      50555   -X+1/2,-Y,Z+1/2                                         
+REMARK 290      51555   -X+1/2,Y,-Z+1/2                                         
+REMARK 290      52555   X+1/2,-Y,-Z+1/2                                         
+REMARK 290      53555   Z+1/2,X,Y+1/2                                           
+REMARK 290      54555   Z+1/2,-X,-Y+1/2                                         
+REMARK 290      55555   -Z+1/2,-X,Y+1/2                                         
+REMARK 290      56555   -Z+1/2,X,-Y+1/2                                         
+REMARK 290      57555   Y+1/2,Z,X+1/2                                           
+REMARK 290      58555   -Y+1/2,Z,-X+1/2                                         
+REMARK 290      59555   Y+1/2,-Z,-X+1/2                                         
+REMARK 290      60555   -Y+1/2,-Z,X+1/2                                         
+REMARK 290      61555   Y+1/2,X,-Z+1/2                                          
+REMARK 290      62555   -Y+1/2,-X,-Z+1/2                                        
+REMARK 290      63555   Y+1/2,-X,Z+1/2                                          
+REMARK 290      64555   -Y+1/2,X,Z+1/2                                          
+REMARK 290      65555   X+1/2,Z,-Y+1/2                                          
+REMARK 290      66555   -X+1/2,Z,Y+1/2                                          
+REMARK 290      67555   -X+1/2,-Z,-Y+1/2                                        
+REMARK 290      68555   X+1/2,-Z,Y+1/2                                          
+REMARK 290      69555   Z+1/2,Y,-X+1/2                                          
+REMARK 290      70555   Z+1/2,-Y,X+1/2                                          
+REMARK 290      71555   -Z+1/2,Y,X+1/2                                          
+REMARK 290      72555   -Z+1/2,-Y,-X+1/2                                        
+REMARK 290      73555   X+1/2,Y+1/2,Z                                           
+REMARK 290      74555   -X+1/2,-Y+1/2,Z                                         
+REMARK 290      75555   -X+1/2,Y+1/2,-Z                                         
+REMARK 290      76555   X+1/2,-Y+1/2,-Z                                         
+REMARK 290      77555   Z+1/2,X+1/2,Y                                           
+REMARK 290      78555   Z+1/2,-X+1/2,-Y                                         
+REMARK 290      79555   -Z+1/2,-X+1/2,Y                                         
+REMARK 290      80555   -Z+1/2,X+1/2,-Y                                         
+REMARK 290      81555   Y+1/2,Z+1/2,X                                           
+REMARK 290      82555   -Y+1/2,Z+1/2,-X                                         
+REMARK 290      83555   Y+1/2,-Z+1/2,-X                                         
+REMARK 290      84555   -Y+1/2,-Z+1/2,X                                         
+REMARK 290      85555   Y+1/2,X+1/2,-Z                                          
+REMARK 290      86555   -Y+1/2,-X+1/2,-Z                                        
+REMARK 290      87555   Y+1/2,-X+1/2,Z                                          
+REMARK 290      88555   -Y+1/2,X+1/2,Z                                          
+REMARK 290      89555   X+1/2,Z+1/2,-Y                                          
+REMARK 290      90555   -X+1/2,Z+1/2,Y                                          
+REMARK 290      91555   -X+1/2,-Z+1/2,-Y                                        
+REMARK 290      92555   X+1/2,-Z+1/2,Y                                          
+REMARK 290      93555   Z+1/2,Y+1/2,-X                                          
+REMARK 290      94555   Z+1/2,-Y+1/2,X                                          
+REMARK 290      95555   -Z+1/2,Y+1/2,X                                          
+REMARK 290      96555   -Z+1/2,-Y+1/2,-X                                        
+REMARK 290                                                                      
+REMARK 290     WHERE NNN -> OPERATOR NUMBER                                     
+REMARK 290           MMM -> TRANSLATION VECTOR                                  
+REMARK 290                                                                      
+REMARK 290 CRYSTALLOGRAPHIC SYMMETRY TRANSFORMATIONS                            
+REMARK 290 THE FOLLOWING TRANSFORMATIONS OPERATE ON THE ATOM/HETATM             
+REMARK 290 RECORDS IN THIS ENTRY TO PRODUCE CRYSTALLOGRAPHICALLY                
+REMARK 290 RELATED MOLECULES.                                                   
+REMARK 290   SMTRY1   1  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2   1  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3   1  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY1   2 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2   2  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3   2  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY1   3 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2   3  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3   3  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY1   4  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2   4  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3   4  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY1   5  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY2   5  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3   5  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1   6  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY2   6 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3   6  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1   7  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY2   7 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3   7  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1   8  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY2   8  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3   8  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1   9  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2   9  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY3   9  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  10  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  10  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY3  10 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  11  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  11  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY3  11 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  12  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  12  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY3  12  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  13  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  13  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  13  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY1  14  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  14 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  14  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY1  15  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  15 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  15  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY1  16  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  16  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  16  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY1  17  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  17  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY3  17  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  18 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  18  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY3  18  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  19 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  19  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY3  19  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  20  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  20  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY3  20  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  21  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY2  21  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  21 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  22  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY2  22  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  22  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  23  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY2  23  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  23  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  24  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY2  24  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  24 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  25  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  25  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  25  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY1  26 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  26  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  26  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY1  27 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  27  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  27  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY1  28  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  28  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  28  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY1  29  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY2  29  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  29  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  30  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY2  30 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  30  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  31  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY2  31 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  31  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  32  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY2  32  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  32  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  33  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  33  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY3  33  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  34  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  34  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY3  34 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  35  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  35  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY3  35 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  36  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  36  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY3  36  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  37  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  37  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  37  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY1  38  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  38 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  38  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY1  39  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  39 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  39  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY1  40  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  40  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  40  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY1  41  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  41  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY3  41  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  42 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  42  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY3  42  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  43 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  43  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY3  43  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  44  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY2  44  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY3  44  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  45  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY2  45  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  45 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  46  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY2  46  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  46  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  47  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY2  47  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  47  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  48  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY2  48  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  48 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  49  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  49  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  49  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY1  50 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  50  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  50  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY1  51 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  51  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  51  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY1  52  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  52  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  52  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY1  53  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY2  53  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  53  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  54  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY2  54 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  54  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  55  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY2  55 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  55  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  56  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY2  56  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  56  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  57  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  57  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY3  57  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  58  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  58  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY3  58 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  59  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  59  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY3  59 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  60  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  60  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY3  60  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  61  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  61  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  61  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY1  62  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  62 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  62  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY1  63  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  63 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  63  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY1  64  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  64  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  64  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY1  65  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  65  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY3  65  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  66 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  66  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY3  66  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  67 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  67  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY3  67  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  68  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  68  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY3  68  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  69  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY2  69  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  69 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  70  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY2  70  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  70  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  71  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY2  71  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  71  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  72  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY2  72  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY3  72 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY1  73  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  73  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  73  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY1  74 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  74  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  74  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY1  75 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  75  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  75  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY1  76  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  76  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  76  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY1  77  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY2  77  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  77  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  78  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY2  78 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  78  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  79  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY2  79 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  79  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  80  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY2  80  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  80  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  81  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  81  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY3  81  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  82  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  82  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY3  82 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  83  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  83  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY3  83 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  84  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  84  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY3  84  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  85  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  85  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  85  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY1  86  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  86 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  86  0.000000  0.000000 -1.000000        0.00000            
+REMARK 290   SMTRY1  87  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  87 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  87  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY1  88  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  88  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  88  0.000000  0.000000  1.000000        0.00000            
+REMARK 290   SMTRY1  89  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  89  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY3  89  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  90 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  90  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY3  90  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  91 -1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  91  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY3  91  0.000000 -1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  92  1.000000  0.000000  0.000000       91.85000            
+REMARK 290   SMTRY2  92  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY3  92  0.000000  1.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  93  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY2  93  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  93 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  94  0.000000  0.000000  1.000000       91.85000            
+REMARK 290   SMTRY2  94  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  94  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  95  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY2  95  0.000000  1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  95  1.000000  0.000000  0.000000        0.00000            
+REMARK 290   SMTRY1  96  0.000000  0.000000 -1.000000       91.85000            
+REMARK 290   SMTRY2  96  0.000000 -1.000000  0.000000       91.85000            
+REMARK 290   SMTRY3  96 -1.000000  0.000000  0.000000        0.00000            
+REMARK 290                                                                      
+REMARK 290 REMARK: NULL                                                         
+REMARK 300                                                                      
+REMARK 300 BIOMOLECULE: 1                                                       
+REMARK 300 SEE REMARK 350 FOR THE AUTHOR PROVIDED AND/OR PROGRAM                
+REMARK 300 GENERATED ASSEMBLY INFORMATION FOR THE STRUCTURE IN                  
+REMARK 300 THIS ENTRY. THE REMARK MAY ALSO PROVIDE INFORMATION ON               
+REMARK 300 BURIED SURFACE AREA.                                                 
+REMARK 350                                                                      
+REMARK 350 COORDINATES FOR A COMPLETE MULTIMER REPRESENTING THE KNOWN           
+REMARK 350 BIOLOGICALLY SIGNIFICANT OLIGOMERIZATION STATE OF THE                
+REMARK 350 MOLECULE CAN BE GENERATED BY APPLYING BIOMT TRANSFORMATIONS          
+REMARK 350 GIVEN BELOW.  BOTH NON-CRYSTALLOGRAPHIC AND                          
+REMARK 350 CRYSTALLOGRAPHIC OPERATIONS ARE GIVEN.                               
+REMARK 350                                                                      
+REMARK 350 BIOMOLECULE: 1                                                       
+REMARK 350 AUTHOR DETERMINED BIOLOGICAL UNIT: 24-MERIC                          
+REMARK 350 SOFTWARE DETERMINED QUATERNARY STRUCTURE: 24-MERIC                   
+REMARK 350 SOFTWARE USED: PISA,PQS                                              
+REMARK 350 TOTAL BURIED SURFACE AREA: 93980 ANGSTROM**2                         
+REMARK 350 SURFACE AREA OF THE COMPLEX: 137880 ANGSTROM**2                      
+REMARK 350 CHANGE IN SOLVENT FREE ENERGY: -264.0 KCAL/MOL                       
+REMARK 350 APPLY THE FOLLOWING TO CHAINS: A                                     
+REMARK 350   BIOMT1   1  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT2   1  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT3   1  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT1   2 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT2   2  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT3   2  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT1   3 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT2   3  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT3   3  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT1   4  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT2   4  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT3   4  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT1   5  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT2   5  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT3   5  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT1   6  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT2   6 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT3   6  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT1   7  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT2   7 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT3   7  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT1   8  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT2   8  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT3   8  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT1   9  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT2   9  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT3   9  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  10  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  10  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT3  10 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  11  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  11  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT3  11 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  12  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  12  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT3  12  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  13  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  13  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT3  13  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT1  14  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  14 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT3  14  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT1  15  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  15 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT3  15  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT1  16  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  16  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT3  16  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT1  17  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  17  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT3  17  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  18 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  18  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT3  18  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  19 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  19  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT3  19  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  20  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT2  20  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT3  20  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  21  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT2  21  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT3  21 -1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  22  0.000000  0.000000  1.000000        0.00000            
+REMARK 350   BIOMT2  22  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT3  22  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  23  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT2  23  0.000000  1.000000  0.000000        0.00000            
+REMARK 350   BIOMT3  23  1.000000  0.000000  0.000000        0.00000            
+REMARK 350   BIOMT1  24  0.000000  0.000000 -1.000000        0.00000            
+REMARK 350   BIOMT2  24  0.000000 -1.000000  0.000000        0.00000            
+REMARK 350   BIOMT3  24 -1.000000  0.000000  0.000000        0.00000            
+REMARK 375                                                                      
+REMARK 375 SPECIAL POSITION                                                     
+REMARK 375 THE FOLLOWING ATOMS ARE FOUND TO BE WITHIN 0.15 ANGSTROMS            
+REMARK 375 OF A SYMMETRY RELATED ATOM AND ARE ASSUMED TO BE ON SPECIAL          
+REMARK 375 POSITIONS.                                                           
+REMARK 375                                                                      
+REMARK 375 ATOM RES CSSEQI                                                      
+REMARK 375 CD    CD A 201  LIES ON A SPECIAL POSITION.                          
+REMARK 375 CD    CD A 202  LIES ON A SPECIAL POSITION.                          
+REMARK 375 CD    CD A 203  LIES ON A SPECIAL POSITION.                          
+REMARK 500                                                                      
+REMARK 500 GEOMETRY AND STEREOCHEMISTRY                                         
+REMARK 500 SUBTOPIC: COVALENT BOND LENGTHS                                      
+REMARK 500                                                                      
+REMARK 500 THE STEREOCHEMICAL PARAMETERS OF THE FOLLOWING RESIDUES              
+REMARK 500 HAVE VALUES WHICH DEVIATE FROM EXPECTED VALUES BY MORE               
+REMARK 500 THAN 6*RMSD (M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN               
+REMARK 500 IDENTIFIER; SSEQ=SEQUENCE NUMBER; I=INSERTION CODE).                 
+REMARK 500                                                                      
+REMARK 500 STANDARD TABLE:                                                      
+REMARK 500 FORMAT: (10X,I3,1X,2(A3,1X,A1,I4,A1,1X,A4,3X),1X,F6.3)               
+REMARK 500                                                                      
+REMARK 500 EXPECTED VALUES PROTEIN: ENGH AND HUBER, 1999                        
+REMARK 500 EXPECTED VALUES NUCLEIC ACID: CLOWNEY ET AL 1996                     
+REMARK 500                                                                      
+REMARK 500  M RES CSSEQI ATM1   RES CSSEQI ATM2   DEVIATION                     
+REMARK 500    HIS A 114   NE2   HIS A 114   CD2    -0.075                       
+REMARK 500    HIS A 132   NE2   HIS A 132   CD2    -0.066                       
+REMARK 500    HIS A 147   NE2   HIS A 147   CD2    -0.067                       
+REMARK 500                                                                      
+REMARK 500 REMARK: NULL                                                         
+REMARK 500                                                                      
+REMARK 500 GEOMETRY AND STEREOCHEMISTRY                                         
+REMARK 500 SUBTOPIC: COVALENT BOND ANGLES                                       
+REMARK 500                                                                      
+REMARK 500 THE STEREOCHEMICAL PARAMETERS OF THE FOLLOWING RESIDUES              
+REMARK 500 HAVE VALUES WHICH DEVIATE FROM EXPECTED VALUES BY MORE               
+REMARK 500 THAN 6*RMSD (M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN               
+REMARK 500 IDENTIFIER; SSEQ=SEQUENCE NUMBER; I=INSERTION CODE).                 
+REMARK 500                                                                      
+REMARK 500 STANDARD TABLE:                                                      
+REMARK 500 FORMAT: (10X,I3,1X,A3,1X,A1,I4,A1,3(1X,A4,2X),12X,F5.1)              
+REMARK 500                                                                      
+REMARK 500 EXPECTED VALUES PROTEIN: ENGH AND HUBER, 1999                        
+REMARK 500 EXPECTED VALUES NUCLEIC ACID: CLOWNEY ET AL 1996                     
+REMARK 500                                                                      
+REMARK 500  M RES CSSEQI ATM1   ATM2   ATM3                                     
+REMARK 500    SER A   1   N   -  CA  -  C   ANGL. DEV. = -16.4 DEGREES          
+REMARK 500    SER A   2   CA  -  C   -  N   ANGL. DEV. = -16.1 DEGREES          
+REMARK 500    ARG A  72   NE  -  CZ  -  NH2 ANGL. DEV. =   3.5 DEGREES          
+REMARK 500    ARG A  75   NE  -  CZ  -  NH1 ANGL. DEV. =   3.8 DEGREES          
+REMARK 500    ASP A  80   CB  -  CG  -  OD1 ANGL. DEV. =   5.7 DEGREES          
+REMARK 500    ASP A  80   CB  -  CG  -  OD2 ANGL. DEV. =  -6.9 DEGREES          
+REMARK 500    GLN A  82   CG  -  CD  -  OE1 ANGL. DEV. = -16.0 DEGREES          
+REMARK 500    GLN A  82   CG  -  CD  -  NE2 ANGL. DEV. =  28.5 DEGREES          
+REMARK 500    TRP A  89   CD1 -  CG  -  CD2 ANGL. DEV. =   6.2 DEGREES          
+REMARK 500    TRP A  89   CE2 -  CD2 -  CG  ANGL. DEV. =  -5.3 DEGREES          
+REMARK 500    ARG A 153   NE  -  CZ  -  NH1 ANGL. DEV. =   4.5 DEGREES          
+REMARK 500    ARG A 153   NE  -  CZ  -  NH2 ANGL. DEV. =  -5.2 DEGREES          
+REMARK 500                                                                      
+REMARK 500 REMARK: NULL                                                         
+REMARK 500                                                                      
+REMARK 500 GEOMETRY AND STEREOCHEMISTRY                                         
+REMARK 500 SUBTOPIC: TORSION ANGLES                                             
+REMARK 500                                                                      
+REMARK 500 TORSION ANGLES OUTSIDE THE EXPECTED RAMACHANDRAN REGIONS:            
+REMARK 500 (M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN IDENTIFIER;               
+REMARK 500 SSEQ=SEQUENCE NUMBER; I=INSERTION CODE).                             
+REMARK 500                                                                      
+REMARK 500 STANDARD TABLE:                                                      
+REMARK 500 FORMAT:(10X,I3,1X,A3,1X,A1,I4,A1,4X,F7.2,3X,F7.2)                    
+REMARK 500                                                                      
+REMARK 500 EXPECTED VALUES: GJ KLEYWEGT AND TA JONES (1996). PHI/PSI-           
+REMARK 500 CHOLOGY: RAMACHANDRAN REVISITED. STRUCTURE 4, 1395 - 1400            
+REMARK 500                                                                      
+REMARK 500  M RES CSSEQI        PSI       PHI                                   
+REMARK 500    SER A   2      136.89    -39.80                                   
+REMARK 500    GLN A 158       86.46   -158.34                                   
+REMARK 500    HIS A 173      -53.03   -141.86                                   
+REMARK 500                                                                      
+REMARK 500 REMARK: NULL                                                         
+REMARK 620                                                                      
+REMARK 620 METAL COORDINATION                                                   
+REMARK 620 (M=MODEL NUMBER; RES=RESIDUE NAME; C=CHAIN IDENTIFIER;               
+REMARK 620 SSEQ=SEQUENCE NUMBER; I=INSERTION CODE):                             
+REMARK 620                                                                      
+REMARK 620 COORDINATION ANGLES FOR:  M RES CSSEQI METAL                         
+REMARK 620                              CD A 203  CD                            
+REMARK 620 N RES CSSEQI ATOM                                                    
+REMARK 620 1 ASP A  80   OD2                                                    
+REMARK 620 2 ASP A  80   OD1  47.2                                              
+REMARK 620 3 ASP A  80   OD2  82.2 125.8                                        
+REMARK 620 4 ASP A  80   OD1 125.8 172.8  47.2                                  
+REMARK 620 5 GLN A  82   NE2  79.3  85.9 104.9  94.4                            
+REMARK 620 6 GLN A  82   NE2 105.0  94.5  79.3  85.9 174.5                      
+REMARK 620 N                    1     2     3     4     5                       
+REMARK 620                                                                      
+REMARK 620 COORDINATION ANGLES FOR:  M RES CSSEQI METAL                         
+REMARK 620                              CD A 201  CD                            
+REMARK 620 N RES CSSEQI ATOM                                                    
+REMARK 620 1 GLU A 130   OE1                                                    
+REMARK 620 2 GLU A 130   OE1 112.7                                              
+REMARK 620 3 GLU A 130   OE1 112.7 112.7                                        
+REMARK 620 N                    1     2                                         
+REMARK 800                                                                      
+REMARK 800 SITE                                                                 
+REMARK 800 SITE_IDENTIFIER: 1                                                   
+REMARK 800 EVIDENCE_CODE: UNKNOWN                                               
+REMARK 800 SITE_DESCRIPTION: METAL-BINDING SITE. SITE 1 IS EXPOSED TO THE       
+REMARK 800  EXTERIOR OF THE PROTEIN SHELL. CD 201 IS LOCATED ON THE THREE-      
+REMARK 800  FOLD AXES OF THE MOLECULE WHICH ARE PRESUMED TO BE THE IRON         
+REMARK 800  ENTRY ROUTE TO THE INTERIOR OF THE PROTEIN. THIS CADMIUM ATOM       
+REMARK 800  HAS THEREFORE A MAXIMUM SITE OCCUPATION FACTOR OF 0.33.             
+REMARK 800                                                                      
+REMARK 800 SITE_IDENTIFIER: 2                                                   
+REMARK 800 EVIDENCE_CODE: UNKNOWN                                               
+REMARK 800 SITE_DESCRIPTION: METAL SITE. SITE 2 IS LOCATED NEAR THE INNER       
+REMARK 800  SURFACE OF THE PROTEIN SHELL. CD 202 IS LOCATED ON THE THREE-       
+REMARK 800  FOLD AXES OF THE MOLECULE WHICH ARE PRESUMED TO BE THE IRON         
+REMARK 800  ENTRY ROUTE TO THE INTERIOR OF THE PROTEIN. THIS CADMIUM ATOM       
+REMARK 800  HAS THEREFORE A MAXIMUM SITE OCCUPATION FACTOR OF 0.33.             
+REMARK 800                                                                      
+REMARK 800 SITE_IDENTIFIER: 3                                                   
+REMARK 800 EVIDENCE_CODE: UNKNOWN                                               
+REMARK 800 SITE_DESCRIPTION: METAL-BINDING SITE CD 203 IS LOCATED ON A TWO      
+REMARK 800  -FOLD AXIS (MAXIMUM SITE OCCUPATION FACTOR OF 0.5). IT BINDS        
+REMARK 800  FERRITIN MOLECULES TOGETHER TO BUILD THE CRYSTAL LATTICE.           
+REMARK 800                                                                      
+REMARK 800 SITE_IDENTIFIER: AC1                                                 
+REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
+REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE CD A 201                  
+REMARK 800                                                                      
+REMARK 800 SITE_IDENTIFIER: AC2                                                 
+REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
+REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE CD A 202                  
+REMARK 800                                                                      
+REMARK 800 SITE_IDENTIFIER: AC3                                                 
+REMARK 800 EVIDENCE_CODE: SOFTWARE                                              
+REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE CD A 203                  
+DBREF  1DAT A    1   174  UNP    P02791   FRIL_HORSE       1    174             
+SEQRES   1 A  174  SER SER GLN ILE ARG GLN ASN TYR SER THR GLU VAL GLU          
+SEQRES   2 A  174  ALA ALA VAL ASN ARG LEU VAL ASN LEU TYR LEU ARG ALA          
+SEQRES   3 A  174  SER TYR THR TYR LEU SER LEU GLY PHE TYR PHE ASP ARG          
+SEQRES   4 A  174  ASP ASP VAL ALA LEU GLU GLY VAL CYS HIS PHE PHE ARG          
+SEQRES   5 A  174  GLU LEU ALA GLU GLU LYS ARG GLU GLY ALA GLU ARG LEU          
+SEQRES   6 A  174  LEU LYS MET GLN ASN GLN ARG GLY GLY ARG ALA LEU PHE          
+SEQRES   7 A  174  GLN ASP LEU GLN LYS PRO SER GLN ASP GLU TRP GLY THR          
+SEQRES   8 A  174  THR PRO ASP ALA MET LYS ALA ALA ILE VAL LEU GLU LYS          
+SEQRES   9 A  174  SER LEU ASN GLN ALA LEU LEU ASP LEU HIS ALA LEU GLY          
+SEQRES  10 A  174  SER ALA GLN ALA ASP PRO HIS LEU CYS ASP PHE LEU GLU          
+SEQRES  11 A  174  SER HIS PHE LEU ASP GLU GLU VAL LYS LEU ILE LYS LYS          
+SEQRES  12 A  174  MET GLY ASP HIS LEU THR ASN ILE GLN ARG LEU VAL GLY          
+SEQRES  13 A  174  SER GLN ALA GLY LEU GLY GLU TYR LEU PHE GLU ARG LEU          
+SEQRES  14 A  174  THR LEU LYS HIS ASP                                          
+HET     CD  A 201       1                                                       
+HET     CD  A 202       1                                                       
+HET     CD  A 203       1                                                       
+HETNAM      CD CADMIUM ION                                                      
+FORMUL   2   CD    3(CD 2+)                                                     
+FORMUL   5  HOH   *106(H2 O)                                                    
+HELIX    1   A THR A   10  TYR A   36  1                                  27    
+HELIX    2   B GLU A   45  ARG A   72  1                                  28    
+HELIX    3   C THR A   92  ALA A  119  1                                  28    
+HELIX    4  D1 PRO A  123  HIS A  132  1                                  10    
+HELIX    5  D2 LEU A  134  SER A  157  1                                  24    
+HELIX    6   E ALA A  159  LEU A  169  1                                  11    
+LINK         OD2 ASP A  80                CD    CD A 203     1555   1555  2.41  
+LINK         OD1 ASP A  80                CD    CD A 203     1555   1555  2.91  
+LINK         OD2 ASP A  80                CD    CD A 203    72555   1555  2.41  
+LINK         OD1 ASP A  80                CD    CD A 203    72555   1555  2.91  
+LINK         NE2 GLN A  82                CD    CD A 203    51555   1555  2.70  
+LINK         NE2 GLN A  82                CD    CD A 203    22555   1555  2.70  
+LINK         OE1 GLU A 130                CD    CD A 201     1555   1555  2.49  
+LINK         OE1 GLU A 130                CD    CD A 201     5555   1555  2.49  
+LINK         OE1 GLU A 130                CD    CD A 201     9555   1555  2.49  
+SITE     1   1  1  CD A 201                                                     
+SITE     1   2  1  CD A 202                                                     
+SITE     1   3  1  CD A 203                                                     
+SITE     1 AC1  1 GLU A 130                                                     
+SITE     1 AC2  1 ASP A 127                                                     
+SITE     1 AC3  2 ASP A  80  GLN A  82                                          
+CRYST1  183.700  183.700  183.700  90.00  90.00  90.00 F 4 3 2      96          
+ORIGX1      1.000000  0.000000  0.000000        0.00000                         
+ORIGX2      0.000000  1.000000  0.000000        0.00000                         
+ORIGX3      0.000000  0.000000  1.000000        0.00000                         
+SCALE1      0.005444  0.000000  0.000000        0.00000                         
+SCALE2      0.000000  0.005444  0.000000        0.00000                         
+SCALE3      0.000000  0.000000  0.005444        0.00000                         
+ATOM      1  N   SER A   1      54.885  16.464  22.595  1.00 55.17           N  
+ATOM      2  CA  SER A   1      54.671  17.602  23.466  1.00 54.83           C  
+ATOM      3  C   SER A   1      53.999  18.447  22.398  1.00 52.22           C  
+ATOM      4  O   SER A   1      54.555  19.221  21.623  1.00 52.38           O  
+ATOM      5  CB  SER A   1      56.086  17.959  23.927  1.00 57.26           C  
+ATOM      6  OG  SER A   1      56.616  16.699  24.383  1.00 61.93           O  
+ATOM      7  N   SER A   2      52.694  18.122  22.401  1.00 47.74           N  
+ATOM      8  CA  SER A   2      51.819  18.389  21.289  1.00 42.26           C  
+ATOM      9  C   SER A   2      51.865  19.668  20.460  1.00 39.93           C  
+ATOM     10  O   SER A   2      52.182  20.813  20.838  1.00 40.26           O  
+CONECT  658 1401                                                                
+CONECT  659 1401                                                                
+CONECT 1038 1399                                                                
+CONECT 1399 1038                                                                
+CONECT 1401  658  659                                                           
+MASTER      804    0    3    6    0    0    6    6 1506    1    5   14          
+END                                                                             
