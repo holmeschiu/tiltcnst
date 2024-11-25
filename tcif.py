@@ -310,10 +310,20 @@ def tcif_transform(amp: np.ndarray, phs: np.ndarray) -> np.ndarray:
 
     return (np.fft.ifft(decom))**2
 
+
 # Function to perform radial averaging
-def radial_average(data: np.ndarray) -> np.ndarray:
-    """Compute the radial average of a 2D array."""
+def radial_averages(data: np.ndarray, pxel_size_nm: float) -> tuple:
+    """
+    Compute the radial average of a 2D array and map distances to spatial frequencies.
     
+    Parameters:
+    - data (np.ndarray): 2D array of intensities.
+    - pxel_size_nm (float): Size of a pixel in nm.
+    
+    Returns:
+    - spatial_frequencies (np.ndarray): Spatial frequencies in nm^-1.
+    - radial_average (np.ndarray): Radial average intensities.
+    """
     # Get the center of the image
     center = np.array(data.shape) // 2
     
@@ -330,17 +340,21 @@ def radial_average(data: np.ndarray) -> np.ndarray:
     # Get the maximum distance (radius)
     max_distance = int(np.max(distances))
 
-    # Prepare an array to hold the binned averages
+    # Prepare arrays for binned averages and spatial frequencies
     binned_data = np.zeros(max_distance)
+    spatial_frequencies = np.zeros(max_distance)
 
     # Loop over each radial distance bin
     for i in range(max_distance):
-        
         # Get the data in the current radial bin +/- a small buffer
         mask = (distances_flat >= i - 0.5) & (distances_flat < i + 0.5)
         binned_data[i] = np.mean(data_flat[mask])
 
-    return binned_data
+        # Calculate spatial frequency (nm^-1)
+        if i > 0:
+            spatial_frequencies[i] = 1 / (i * pxel_size_nm)
+
+    return spatial_frequencies[1:], binned_data[1:]  # Exclude zero-frequency (DC component)
 
 
 if __name__ == '__main__':
@@ -349,7 +363,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     # Parameters
-    imge_size = 512
+    imge_size = 256
     pxel_size_nm = 0.1
     kvolt = 300
     Cs_mm = 2.0
@@ -382,7 +396,7 @@ if __name__ == '__main__':
     dB = (-10 * np.log(amplitude_normalized)) + 10e-6
 
     # Perform radial averaging on the intensity data
-    radial_avg_intensity = radial_average(intensity)
+    spatial_frequencies, radial_average = radial_averages(intensity, pxel_size_nm)
 
     # Plotting normalized intensity
     print('Plotting normalized intensities...')
@@ -404,10 +418,10 @@ if __name__ == '__main__':
 
     # Plotting radial averaged intensity
     print('Plotting radial averaged intensity...')
-    plt.plot(radial_avg_intensity, color='black')
-    plt.title('Radial Averaged Intensity')
-    plt.xlabel('Radial Distance (pixels)')
+    plt.plot(spatial_frequencies, radial_average, color = 'black')
+    plt.xlabel('Spatial Frequency (nm$^{-1}$)')
     plt.ylabel('Average Intensity')
+    plt.title('Radial Average Intensity vs. Spatial Frequency')
     plt.savefig('radial_avg_intensity.png', dpi = 800)
     plt.clf()
     

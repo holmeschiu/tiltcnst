@@ -267,7 +267,7 @@ if __name__ == '__main__':
     dB = (-10 * np.log(amplitude_normalized)) + 10e-6
 
     # Perform radial averaging on the intensity data
-    radial_avg_intensity = tcif.radial_average(intensity)
+    spatial_frequencies, radial_average = tcif.radial_averages(intensity, pxel_size_nm)
 
     # Plotting normalized intensity
     print('Plotting normalized intensities...')
@@ -289,10 +289,10 @@ if __name__ == '__main__':
 
     # Plotting radial averaged intensity
     print('Plotting radial averaged intensity...')
-    plt.plot(radial_avg_intensity, color='black')
-    plt.title('Radial Averaged Intensity')
-    plt.xlabel('Radial Distance (pixels)')
+    plt.plot(spatial_frequencies, radial_average, color = 'black')
+    plt.xlabel('Spatial Frequency (nm$^{-1}$)')
     plt.ylabel('Average Intensity')
+    plt.title('Radial Average Intensity vs. Spatial Frequency')
     plt.savefig('radial_avg_intensity.png', dpi = 800)
     plt.clf()
 
