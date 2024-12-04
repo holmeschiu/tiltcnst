@@ -14,6 +14,7 @@ import sys
 from typing import Tuple
 import matplotlib.pyplot as plt
 import time
+from projection_of_3d_to_2d import generate_2d_projection
 
 
 def wvlength_pm(kvolt: int) -> float:
@@ -125,12 +126,11 @@ def W_0(Cs_mm: float, wvlength_pm: float, df1_nm: float, df2_nm: float, beta_0_r
     # Squared spatial frequency 
     ssqu = (ki*freq_step_inm - cntr_shift_inm)**2 + (kj*freq_step_inm - cntr_shift_inm)**2
 
-
+    # Calculate alpha_g (angle between defocus 1 and x-axis
     # if (ki*freq_step_inm - cntr_shift_inm).any() == 0:
     #     alpha_g = math.pi/2
     # else:
     #     alpha_g = np.arctan((kj*freq_step_inm-cntr_shift_inm)/(ki*freq_step_inm-cntr_shift_inm))
-    # Calculate alpha_g (angle between defocus 1 and x-axis
 
     # Calculating alpha_g
     alpha_g = np.arctan2(kj * freq_step_inm - cntr_shift_inm, ki * freq_step_inm - cntr_shift_inm)
@@ -363,7 +363,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     # Parameters
-    imge_size = 256
+    imge_size = 320
     pxel_size_nm = 0.1
     kvolt = 300
     Cs_mm = 2.0
@@ -375,12 +375,24 @@ if __name__ == '__main__':
     # Phase distortion function called
     w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
 
-    # Setting seed for testing
-    np.random.seed(1387)
+    ########################## simulated test object ##########################################################################
+    # # Setting seed for testing
+    # np.random.seed(1387)
 
-    # Generating test object
-    print('Generating object...')
-    spec = np.random.rand(imge_size, imge_size)
+    # # Generating test object
+    # print('Generating object...')
+    # spec = np.random.rand(imge_size, imge_size)
+    ###########################################################################################################################
+
+    ########################## MRC file #######################################################################################
+    # MRC File and Euler Angles for Projection
+    mrc_filename = "cryosparc_P13_J1396_003_volume_map_sharp.mrc"
+    euler_angles = (0, 0, 0)  
+
+    # Generate 2D projection from 3D MRC file
+    print('Generating 2D projection from 3D MRC file...')
+    spec = generate_2d_projection(mrc_filename, euler_angles)
+    ###########################################################################################################################
 
     # Calling TCIF
     print('Calling TCIF...')
