@@ -14,7 +14,6 @@ import sys
 from typing import Tuple
 import matplotlib.pyplot as plt
 import time
-from projection_of_3d_to_2d import generate_2d_projection
 
 
 def wvlength_pm(kvolt: int) -> float:
@@ -312,18 +311,9 @@ def tcif_transform(amp: np.ndarray, phs: np.ndarray) -> np.ndarray:
 
 
 # Function to perform radial averaging
-def radial_averages(data: np.ndarray, pxel_size_nm: float) -> tuple:
-    """
-    Compute the radial average of a 2D array and map distances to spatial frequencies.
+def radial_average(data: np.ndarray) -> np.ndarray:
+    """Compute the radial average of a 2D array."""
     
-    Parameters:
-    - data (np.ndarray): 2D array of intensities.
-    - pxel_size_nm (float): Size of a pixel in nm.
-    
-    Returns:
-    - spatial_frequencies (np.ndarray): Spatial frequencies in nm^-1.
-    - radial_average (np.ndarray): Radial average intensities.
-    """
     # Get the center of the image
     center = np.array(data.shape) // 2
     
@@ -340,21 +330,17 @@ def radial_averages(data: np.ndarray, pxel_size_nm: float) -> tuple:
     # Get the maximum distance (radius)
     max_distance = int(np.max(distances))
 
-    # Prepare arrays for binned averages and spatial frequencies
+    # Prepare an array to hold the binned averages
     binned_data = np.zeros(max_distance)
-    spatial_frequencies = np.zeros(max_distance)
 
     # Loop over each radial distance bin
     for i in range(max_distance):
+        
         # Get the data in the current radial bin +/- a small buffer
         mask = (distances_flat >= i - 0.5) & (distances_flat < i + 0.5)
         binned_data[i] = np.mean(data_flat[mask])
 
-        # Calculate spatial frequency (nm^-1)
-        if i > 0:
-            spatial_frequencies[i] = 1 / (i * pxel_size_nm)
-
-    return spatial_frequencies[1:], binned_data[1:]  # Exclude zero-frequency (DC component)
+    return binned_data
 
 
 if __name__ == '__main__':
@@ -363,8 +349,8 @@ if __name__ == '__main__':
     start_time = time.time()
 
     # Parameters
-    imge_size = 320
-    pxel_size_nm = 0.1
+    imge_size = 512 
+    pxel_size_nm = 0.1 # 0.05
     kvolt = 300
     Cs_mm = 2.0
     df1_nm = 1500.0
@@ -376,22 +362,12 @@ if __name__ == '__main__':
     w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
 
     ########################## simulated test object ##########################################################################
-    # # Setting seed for testing
-    # np.random.seed(1387)
+    # Setting seed for testing
+    np.random.seed(1387)
 
-    # # Generating test object
-    # print('Generating object...')
-    # spec = np.random.rand(imge_size, imge_size)
-    ###########################################################################################################################
-
-    ########################## MRC file #######################################################################################
-    # MRC File and Euler Angles for Projection
-    mrc_filename = "cryosparc_P13_J1396_003_volume_map_sharp.mrc"
-    euler_angles = (0, 0, 0)  
-
-    # Generate 2D projection from 3D MRC file
-    print('Generating 2D projection from 3D MRC file...')
-    spec = generate_2d_projection(mrc_filename, euler_angles)
+    # Generating test object
+    print('Generating object...')
+    spec = np.random.rand(imge_size, imge_size)
     ###########################################################################################################################
 
     # Calling TCIF
@@ -408,7 +384,7 @@ if __name__ == '__main__':
     dB = (-10 * np.log(amplitude_normalized)) + 10e-6
 
     # Perform radial averaging on the intensity data
-    spatial_frequencies, radial_average = radial_averages(intensity, pxel_size_nm)
+    radial_avg = radial_average(intensity)
 
     # Plotting normalized intensity
     print('Plotting normalized intensities...')
@@ -430,10 +406,12 @@ if __name__ == '__main__':
 
     # Plotting radial averaged intensity
     print('Plotting radial averaged intensity...')
-    plt.plot(spatial_frequencies, radial_average, color = 'black')
-    plt.xlabel('Spatial Frequency (nm$^{-1}$)')
+    # Generate the x-axis (radial distances in pixels)
+    radial_distances = np.arange(len(radial_avg))
+    plt.plot(radial_distances, radial_avg, color = 'black')
+    plt.xlabel('Radial Distance (pixels)')
     plt.ylabel('Average Intensity')
-    plt.title('Radial Average Intensity vs. Spatial Frequency')
+    plt.title('Radial Average Intensity vs. Radial Distance')
     plt.savefig('radial_avg_intensity.png', dpi = 800)
     plt.clf()
     
