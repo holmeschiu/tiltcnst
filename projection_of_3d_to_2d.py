@@ -52,7 +52,6 @@ def generate_2d_projection(mrc_filename, angles, axis = 0):
     with mrcfile.open(mrc_filename, permissive = True) as mrc:
         # Read the data from the MRC file
         data = mrc.data
-        print(np.shape(data))
 
         # Check if data needs to be converted from complex
         if np.iscomplexobj(data):
@@ -69,6 +68,7 @@ def generate_2d_projection(mrc_filename, angles, axis = 0):
         plt.imshow(projection, cmap = "gray")
         plt.colorbar()
         plt.savefig(f"proj_{pro}.png")
+        plt.gca().invert_yaxis()
         plt.clf()
 
         return projection
@@ -77,7 +77,7 @@ def generate_2d_projection(mrc_filename, angles, axis = 0):
 
 # Execution
 # Input MRC file name
-mrc_filename = "cryosparc_P13_J1396_003_volume_map_sharp.mrc" 
+mrc_filename = "1dat_2_ang_small.mrc" 
 
 # Number of projections to generate
 # num_of_projections = int(input("How many projections do you need? "))
@@ -91,7 +91,7 @@ for pro in range(num_of_projections):
     angles = (0, 0, 0) # used to test
     
     # Printing projection number and angles of projection
-    print("Projection #", pro, "\nPhi:", angles[0], "degrees", "\nTheta:", angles[1], "degrees", "\nPsi:", angles[2], "degrees")
+    print("Phi:", angles[0], "degrees", "\nTheta:", angles[1], "degrees", "\nPsi:", angles[2], "degrees")
     
     # Generating projection 
     generate_2d_projection(mrc_filename, angles, axis = 0)
@@ -100,4 +100,4 @@ for pro in range(num_of_projections):
 # Calculating end time of program
 end_time = time.time()
 # Printing program run time
-print(f"Execution time: {end_time - start_time} seconds")
+# print(f"Execution time: {end_time - start_time} seconds")

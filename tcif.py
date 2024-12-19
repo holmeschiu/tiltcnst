@@ -14,6 +14,7 @@ import sys
 from typing import Tuple
 import matplotlib.pyplot as plt
 import time
+from projection_of_3d_to_2d import generate_2d_projection
 
 
 def wvlength_pm(kvolt: int) -> float:
@@ -349,33 +350,44 @@ if __name__ == '__main__':
     start_time = time.time()
 
     # Parameters
-    imge_size = 512 
-    pxel_size_nm = 0.1 # 0.05
+    imge_size = 256 # 512 
+    pxel_size_nm = 0.2
     kvolt = 300
     Cs_mm = 2.0
-    df1_nm = 1500.0
-    df2_nm = 1500.0
+    df1_nm = 1000.0
+    df2_nm = 1000.0
     beta_rad = 0.0
-    alpha_rad = np.deg2rad(0.0)
+    alpha_rad = np.deg2rad(60.0)
 
     # Phase distortion function called
     w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
 
     ########################## simulated test object ##########################################################################
-    # Setting seed for testing
-    np.random.seed(1387)
+    # # Setting seed for testing
+    # np.random.seed(1387)
 
-    # Generating test object
-    print('Generating object...')
-    spec = np.random.rand(imge_size, imge_size)
+    # # Generating test object
+    # print('Generating object...')
+    # spec = np.random.rand(imge_size, imge_size)
     ###########################################################################################################################
 
+    ########################## apoF projection ###############################################################################
+    # Parameters for the projection
+    mrc_filename = "1dat_2_ang_med.mrc"  # Path to your MRC file
+    angles = (0, 0, 0)  # Euler angles for projection
+    
+    # Generating 2D projection
+    print('Generating 2D projection...')
+    spec = generate_2d_projection(mrc_filename, angles, axis = 0)
+    ###########################################################################################################################
     # Calling TCIF
     print('Calling TCIF...')
     amp, phs = tcif(spec, w0, beta_rad, alpha_rad, wvlength_pm(kvolt), imge_size, pxel_size_nm)
 
     # Normalize the amplitude array
     amplitude_normalized = (amp - np.min(amp)) / (np.max(amp) - np.min(amp))
+    phase_normalized = (phs - np.min(phs)) / (np.max(phs) - np.min(phs))
+    print(phase_normalized)
     
     # Intensity = amplitude^2
     intensity = amplitude_normalized ** 2
@@ -383,8 +395,28 @@ if __name__ == '__main__':
     # Power spectrum for normalized amplitudes
     dB = (-10 * np.log(amplitude_normalized)) + 10e-6
 
-    # Perform radial averaging on the intensity data
-    radial_avg = radial_average(intensity)
+    # Perform radial averaging 
+    radial_avg_amp = radial_average(amplitude_normalized)
+    radial_avg_phs = radial_average(phase_normalized)
+    nyquist_frequency = 1 / (2 * pxel_size_nm)
+
+    # Plotting amplitude
+    print('Plotting amplitude...')
+    plt.imshow(amp, cmap='gray') 
+    plt.colorbar()
+    plt.gca().invert_yaxis()
+    plt.title('Amplitude')
+    plt.savefig('amplitude_60deg_1000nm.png')
+    plt.clf() 
+
+    # Plotting phase
+    print('Plotting phase...')
+    plt.imshow(phs, cmap='gray') 
+    plt.colorbar()
+    plt.gca().invert_yaxis()
+    plt.title('Phase')
+    plt.savefig('phase_60deg_1000nm.png')
+    plt.clf() 
 
     # Plotting normalized intensity
     print('Plotting normalized intensities...')
@@ -392,7 +424,7 @@ if __name__ == '__main__':
     plt.colorbar()
     plt.gca().invert_yaxis()
     plt.title('Intensity of Normalized Amplitudes')
-    plt.savefig('intensity.png')
+    plt.savefig('intensity_60deg_1000nm.png')
     plt.clf() 
 
     # Plotting dB
@@ -401,20 +433,31 @@ if __name__ == '__main__':
     plt.colorbar()
     plt.gca().invert_yaxis()
     plt.title('Power Spectrum of Normalized Amplitudes')
-    plt.savefig('power_spectrum.png')
+    plt.savefig('power_spectrum_60deg_1000nm.png')
     plt.clf()
 
-    # Plotting radial averaged intensity
-    print('Plotting radial averaged intensity...')
-    # Generate the x-axis (radial distances in pixels)
-    radial_distances = np.arange(len(radial_avg))
-    plt.plot(radial_distances, radial_avg, color = 'black')
-    plt.xlabel('Radial Distance (pixels)')
-    plt.ylabel('Average Intensity')
-    plt.title('Radial Average Intensity vs. Radial Distance')
-    plt.savefig('radial_avg_intensity.png', dpi = 800)
+    # Plotting radial averaged amplitude 
+    print('Plotting radial averaged amplitude...')
+    # Map radial distances to spatial frequencies - x-axis
+    spatial_frequencies = np.linspace(0, nyquist_frequency, len(radial_avg_amp))
+    plt.plot(spatial_frequencies, radial_avg_amp, color='black')
+    plt.xlabel('Spatial Frequency (nm$^{-1}$)')
+    plt.ylabel('Average Amplitude')
+    plt.title('Radial Average Amplitude vs. Spatial Frequency')
+    plt.savefig('radial_avg_amplitude_60deg_1000nm.png', dpi=800)
     plt.clf()
     
+    # Plotting radial averaged phase 
+    print('Plotting radial averaged phase...')
+    # Map radial distances to spatial frequencies - x-axis
+    spatial_frequencies = np.linspace(0, nyquist_frequency, len(radial_avg_phs))
+    plt.plot(spatial_frequencies, radial_avg_phs, color='black')
+    plt.xlabel('Spatial Frequency (nm$^{-1}$)')
+    plt.ylabel('Average Phase')
+    plt.title('Radial Average Phase vs. Spatial Frequency')
+    plt.savefig('radial_avg_phase_60deg_1000nm.png', dpi=800)
+    plt.clf()
+
     # # Plotting the CTF
     # ctf_plot = -2 * np.sin(w0)
     # plt.imshow(ctf_plot, cmap='gray') 
