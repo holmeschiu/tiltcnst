@@ -359,7 +359,7 @@ if __name__ == '__main__':
     df1_nm = 1000.0
     df2_nm = 1000.0
     beta_rad = 0.0
-    alpha_rad = np.deg2rad(0.0)
+    alpha_rad = np.deg2rad(60.0)
 
     # Phase distortion function called
     w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
@@ -387,6 +387,23 @@ if __name__ == '__main__':
     print('Calling TCIF...')
     amp, phs = tcif(spec, w0, beta_rad, alpha_rad, wvlength_pm(kvolt), imge_size, pxel_size_nm)
     
+    print('Calculating intensities in real space...')
+    intiii = tcif_transform(amp, phs)
+    print(intiii)
+    print(intiii.dtype)
+    real_space_intensity = np.abs(intiii)**2
+
+    
+    dB = (-20 * np.log(real_space_intensity)) + 10e-6
+    plt.imshow(dB, cmap='gray') 
+    plt.colorbar()
+    # plt.gca().invert_yaxis()
+    plt.title('Real Space Power Spectrum')
+    plt.savefig('real-space_power_spectrum_60deg_1000nm.png')
+    plt.clf() 
+
+
+    
     # Normalize the amplitude array
     amplitude_normalized = (amp - np.min(amp)) / (np.max(amp) - np.min(amp))
     # Plotting amplitude
@@ -395,7 +412,7 @@ if __name__ == '__main__':
     plt.colorbar()
     plt.gca().invert_yaxis()
     plt.title('Normalized Amplitude')
-    plt.savefig('amplitude_0deg_1000nm.png')
+    plt.savefig('amplitude_60deg_1000nm.png')
     plt.clf() 
 
     # Plotting phase (degrees)
@@ -405,20 +422,20 @@ if __name__ == '__main__':
     plt.colorbar()
     plt.gca().invert_yaxis()
     plt.title('Phase (degrees)')
-    plt.savefig('phase_0deg_1000nm.png')
+    plt.savefig('phase_60deg_1000nm.png')
     plt.clf() 
 
-    # Intensity = amplitude^2
-    intensity = amp ** 2
-    intensity_normalized = (intensity - np.min(intensity)) / (np.max(intensity) - np.min(intensity))
-    # Plotting normalized intensity
-    print('Plotting normalized intensities...')
-    plt.imshow(intensity_normalized, cmap='gray') 
-    plt.colorbar()
-    plt.gca().invert_yaxis()
-    plt.title('Power Spectrum (Normalized Intensity)')
-    plt.savefig('intensity_0deg_1000nm.png')
-    plt.clf() 
+    # # Intensity = amplitude^2
+    # intensity = amp ** 2
+    # intensity_normalized = (intensity - np.min(intensity)) / (np.max(intensity) - np.min(intensity))
+    # # Plotting normalized intensity
+    # print('Plotting normalized intensities...')
+    # plt.imshow(intensity_normalized, cmap='gray') 
+    # plt.colorbar()
+    # plt.gca().invert_yaxis()
+    # plt.title('Power Spectrum (Normalized Intensity)')
+    # plt.savefig('intensity_0deg_1000nm.png')
+    # plt.clf() 
 
     # Power spectrum for amplitudes
     dB = (-10 * np.log(amp)) + 10e-6
@@ -428,7 +445,7 @@ if __name__ == '__main__':
     plt.colorbar()
     plt.gca().invert_yaxis()
     plt.title('Power Spectrum (dB)')
-    plt.savefig('power_spectrum_0deg_1000nm.png')
+    plt.savefig('power_spectrum_60deg_1000nm.png')
     plt.clf()
 
     # Perform radial averaging of amplitudes
@@ -440,9 +457,9 @@ if __name__ == '__main__':
     spatial_frequencies = np.linspace(0, nyquist_frequency, len(radial_avg_amp))
     plt.plot(spatial_frequencies, radial_avg_amp, color='black')
     plt.xlabel('Spatial Frequency (nm$^{-1}$)')
-    plt.ylabel('Average Amplitude')
-    plt.title('Radial Average Amplitude vs. Spatial Frequency (nm$^{-1}$)')
-    plt.savefig('radial_avg_amplitude_0deg_1000nm.png', dpi=800)
+    plt.ylabel('Radially Averaged Amplitude')
+    plt.title('Radially Averaged Amplitude vs. Spatial Frequency (nm$^{-1}$)')
+    plt.savefig('radial_avg_amplitude_60deg_1000nm.png', dpi=800)
     plt.clf()
     
 
@@ -456,7 +473,6 @@ if __name__ == '__main__':
 
     # Perform radial averaging on the phase difference array
     radial_avg_phase_diff = radial_average(phase_difference)
-    print(radial_avg_phase_diff)
     # Generate corresponding radial spatial frequencies
     spatial_frequencies = np.linspace(0, nyquist_frequency, len(radial_avg_phase_diff))
 
@@ -466,7 +482,7 @@ if __name__ == '__main__':
     plt.xlabel('Spatial Frequency (nm$^{-1}$)')
     plt.ylabel('Radially Averaged Phase Difference')
     plt.title('Radially Averaged Phase Difference vs. Spatial Frequency')
-    plt.savefig('radial_avg_phase_difference.png', dpi=800)
+    plt.savefig('radial_avg_phase_difference_60deg_1000nm.png', dpi=800)
     plt.clf()
 
 
@@ -498,14 +514,14 @@ if __name__ == '__main__':
     plt.savefig('phase_difference_heatmap.png', dpi=800)
     plt.clf()
 
-    # Plotting the CTF
-    ctf_plot = -2 * np.sin(w0)
-    plt.imshow(ctf_plot, cmap='gray') 
-    plt.colorbar()
-    plt.title('CTF')
-    plt.gca().invert_yaxis()
-    plt.savefig('CTF.png')
-    plt.clf()  # Clear the figure
+    # # Plotting the CTF
+    # ctf_plot = -2 * np.sin(w0)
+    # plt.imshow(ctf_plot, cmap='gray') 
+    # plt.colorbar()
+    # plt.title('CTF')
+    # plt.gca().invert_yaxis()
+    # plt.savefig('CTF.png')
+    # plt.clf()  # Clear the figure
     
     # End time
     end_time = time.time()
