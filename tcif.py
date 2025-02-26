@@ -251,8 +251,9 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
     freqs = calculate_spatial_frequencies(imge_size, pxel_size_nm)
 
     # Shifted FFT of the specimen exit wave
-    f_spec = np.fft.fftshift(np.fft.fft2(spec))
-
+    # f_spec = np.fft.fftshift(np.fft.fft2(spec)) # Numpy FFT
+    f_spec = np.fft.fftshift(dft2d_matrix(spec)) # DFT
+    
     # Create meshgrid for frequency coordinates
     ki, kj = np.meshgrid(freqs, freqs, indexing='ij')
 
@@ -297,22 +298,22 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
     return amp, phs
     
 
-def tcif_transform(amp: np.ndarray, phs: np.ndarray) -> np.ndarray:
-    """Inverse Fourier transform of the tilt imaging function. 
-    Args:
-        amp (np.ndarray): amplitudes
-        phs (np.ndarray): phases
-    Returns:
-        np.ndarray: intensities in real space
-    """
-    img_size = amp.shape[0]
-    decom = np.zeros((img_size, img_size), dtype=complex) # used to be decom = np.zeros((img_size, img_size), dtype=float)
+# def tcif_transform(amp: np.ndarray, phs: np.ndarray) -> np.ndarray:
+#     """Inverse Fourier transform of the tilt imaging function. 
+#     Args:
+#         amp (np.ndarray): amplitudes
+#         phs (np.ndarray): phases
+#     Returns:
+#         np.ndarray: intensities in real space
+#     """
+#     img_size = amp.shape[0]
+#     decom = np.zeros((img_size, img_size), dtype=complex) # used to be decom = np.zeros((img_size, img_size), dtype=float)
 
-    for m in range(img_size):
-        for n in range(img_size):
-            decom[m, n] = amp[m, n] * (math.cos(phs[m, n]) + 1j * math.sin(phs[m, n]))
+#     for m in range(img_size):
+#         for n in range(img_size):
+#             decom[m, n] = amp[m, n] * (math.cos(phs[m, n]) + 1j * math.sin(phs[m, n]))
 
-    return (np.fft.ifft(decom))**2
+#     return (np.fft.ifft(decom))**2
 
 
 # Function to perform radial averaging
@@ -347,6 +348,35 @@ def radial_average(data: np.ndarray) -> np.ndarray:
 
     return binned_data
 
+#  DFT transformation matrix
+def dft_matrix(N: int) -> np.ndarray:
+    """Compute the DFT transformation matrix."""
+    n = np.arange(N)
+    k = n.reshape((N, 1))
+    W = np.exp(-2j * np.pi * k * n / N)
+    return W
+
+# 2D DFT 
+def dft2d_matrix(image: np.ndarray) -> np.ndarray:
+    """Compute the 2D Discrete Fourier Transform (DFT) using matrix multiplication."""
+    N, M = image.shape
+    W_N = dft_matrix(N)
+    W_M = dft_matrix(M)
+    
+    # Compute the DFT using matrix multiplication
+    return W_N @ image @ W_M
+
+# 2D IDFT
+def idft2d_matrix(f_transform: np.ndarray) -> np.ndarray:
+    """Compute the 2D Inverse Discrete Fourier Transform (IDFT) using matrix multiplication."""
+    N, M = f_transform.shape
+    W_N_inv = np.linalg.inv(dft_matrix(N))
+    W_M_inv = np.linalg.inv(dft_matrix(M))
+    
+    # Compute the IDFT using matrix multiplication
+    return W_N_inv @ f_transform @ W_M_inv
+
+
 
 if __name__ == '__main__':
     
@@ -358,10 +388,10 @@ if __name__ == '__main__':
     pxel_size_nm = 0.2
     kvolt = 300
     Cs_mm = 2.0
-    df1_nm = 1000.0
-    df2_nm = 1000.0
+    df1_nm = -500.0
+    df2_nm = -500.0
     beta_rad = 0.0
-    alpha_rad = np.deg2rad(60.0)
+    alpha_rad = np.deg2rad(30.0)
 
     # Phase distortion function called
     w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
@@ -377,32 +407,58 @@ if __name__ == '__main__':
 
     ########################## apoF projection ###############################################################################
     # Parameters for the projection
-    mrc_filename = '8tu7_2_ang_med.mrc'  # Path to your MRC file
+    mrc_filename = '8tu7_4ang_apix2.mrc'  # Path to your MRC file
     angles = (0, 0, 0)  # Euler angles for projection
+    print('Angles: ', angles)
     
     # Generating 2D projection
     print('Generating 2D projection...')
     spec = generate_2d_projection(mrc_filename, angles, axis = 0)
+    
+    # Plotting 2D projection
+    plt.imshow(spec, cmap='gray')
+    plt.title('2D Projection of Apoferritin')
+    plt.colorbar()
+    plt.savefig('projection.png', dpi = 800)
+    plt.clf()
+    
 
     ###########################################################################################################################
     # Calling TCIF
     print('Calling TCIF...')
     amp, phs = tcif(spec, w0, beta_rad, alpha_rad, wvlength_pm(kvolt), imge_size, pxel_size_nm)
     
-    print('Calculating intensities in real space...')
-    intiii = tcif_transform(amp, phs)
-    print(intiii)
-    print(intiii.dtype)
-    real_space_intensity = np.abs(intiii)**2
+    # Image reconstruction
+    print('Reconstructing image...')
+    # tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs)))) # Numpy IFFT
+    tilt_im = np.abs(idft2d_matrix(np.fft.ifftshift(amp * np.exp(1j * phs)))) # IDFT
+
+    # Normalizes real - space image
+    tilt_im = (tilt_im - tilt_im.mean()) / (tilt_im.std())
+    
+    # Plots real space image
+    plt.imshow(tilt_im, cmap='gray')
+    plt.title('Real Space Image After TCIF')
+    plt.colorbar()
+    plt.savefig('tilted_img_DFT.png', dpi = 800)
+    plt.clf()
 
     
-    dB = (-20 * np.log(real_space_intensity)) + 10e-6
-    plt.imshow(dB, cmap='gray') 
-    plt.colorbar()
-    # plt.gca().invert_yaxis()
-    plt.title('Real Space Power Spectrum')
-    plt.savefig('real-space_power_spectrum_60deg_1000nm.png')
-    plt.clf() 
+    
+    # print('Calculating intensities in real space...')
+    # intiii = tcif_transform(amp, phs)
+    # print(intiii)
+    # print(intiii.dtype)
+    # real_space_intensity = np.abs(intiii)**2
+
+    
+    # dB = (-20 * np.log(real_space_intensity)) + 10e-6
+    # plt.imshow(dB, cmap='gray') 
+    # plt.colorbar()
+    # # plt.gca().invert_yaxis()
+    # plt.title('Real Space Power Spectrum')
+    # plt.savefig('real-space_power_spectrum_60deg_1000nm.png')
+    # plt.clf() 
 
 
     
