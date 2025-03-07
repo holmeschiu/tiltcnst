@@ -251,8 +251,8 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
     freqs = calculate_spatial_frequencies(imge_size, pxel_size_nm)
 
     # Shifted FFT of the specimen exit wave
-    # f_spec = np.fft.fftshift(np.fft.fft2(spec)) # Numpy FFT
-    f_spec = np.fft.fftshift(dft2d_matrix(spec)) # DFT
+    f_spec = np.fft.fftshift(np.fft.fft2(spec)) # Numpy FFT
+    # f_spec = np.fft.fftshift(dft2d_matrix(spec)) # DFT
     
     # Create meshgrid for frequency coordinates
     ki, kj = np.meshgrid(freqs, freqs, indexing='ij')
@@ -386,18 +386,18 @@ if __name__ == '__main__':
     # Parameters
     imge_size = 256
     pxel_size_nm = 0.2
-    kvolt = 300
+    kvolt = 200
     Cs_mm = 2.0
-    df1_nm = -500.0
-    df2_nm = -500.0
+    df1_nm = 2000.0
+    df2_nm = 2000.0
     beta_rad = 0.0
-    alpha_rad = np.deg2rad(30.0)
+    alpha_rad = np.deg2rad(20.0)
 
     # Phase distortion function called
     w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
 
     ########################## simulated test object ##########################################################################
-    # # Setting seed for testing
+    # Setting seed for testing
     # np.random.seed(1387)
 
     # # Generating test object
@@ -407,7 +407,8 @@ if __name__ == '__main__':
 
     ########################## apoF projection ###############################################################################
     # Parameters for the projection
-    mrc_filename = '8tu7_4ang_apix2.mrc'  # Path to your MRC file
+    # mrc_filename = '8tu7_4ang_apix2.mrc'  
+    mrc_filename = 'ribo_apix2_res4.mrc'
     angles = (0, 0, 0)  # Euler angles for projection
     print('Angles: ', angles)
     
@@ -417,94 +418,138 @@ if __name__ == '__main__':
     
     # Plotting 2D projection
     plt.imshow(spec, cmap='gray')
-    plt.title('2D Projection of Apoferritin')
+    plt.title('2D Projection')
     plt.colorbar()
     plt.savefig('projection.png', dpi = 800)
     plt.clf()
-    
+  
 
     ###########################################################################################################################
     # Calling TCIF
     print('Calling TCIF...')
     amp, phs = tcif(spec, w0, beta_rad, alpha_rad, wvlength_pm(kvolt), imge_size, pxel_size_nm)
-    
+
+
+    ##########
+    # Phase wrapping issue?
+    from skimage.restoration import unwrap_phase
+
+    phs_unwrapped = unwrap_phase(phs)
+
+    plt.imshow(phs_unwrapped, cmap='hsv')
+    plt.colorbar(label='Unwrapped Phase (radians)')
+    plt.title('Unwrapped Phase Map')
+    plt.savefig('unwrapped_phs_map.png', dpi = 800)
+    plt.clf()
+    ##########
+
+
+
     # Image reconstruction
     print('Reconstructing image...')
-    # tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs)))) # Numpy IFFT
-    tilt_im = np.abs(idft2d_matrix(np.fft.ifftshift(amp * np.exp(1j * phs)))) # IDFT
+    tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs)))) # Numpy IFFT
+    # tilt_im = np.abs(idft2d_matrix(np.fft.ifftshift(amp * np.exp(1j * phs)))) # IDFT
 
     # Normalizes real - space image
-    tilt_im = (tilt_im - tilt_im.mean()) / (tilt_im.std())
+    tilt_im_n = (tilt_im - tilt_im.mean()) / (tilt_im.std())
     
     # Plots real space image
-    plt.imshow(tilt_im, cmap='gray')
+    plt.imshow(tilt_im_n, cmap='gray')
     plt.title('Real Space Image After TCIF')
     plt.colorbar()
-    plt.savefig('tilted_img_DFT.png', dpi = 800)
+    plt.savefig('tilted_img_FFT.png', dpi = 800)
     plt.clf()
 
-    
-    
-    # print('Calculating intensities in real space...')
-    # intiii = tcif_transform(amp, phs)
-    # print(intiii)
-    # print(intiii.dtype)
-    # real_space_intensity = np.abs(intiii)**2
 
-    
-    # dB = (-20 * np.log(real_space_intensity)) + 10e-6
-    # plt.imshow(dB, cmap='gray') 
-    # plt.colorbar()
-    # # plt.gca().invert_yaxis()
-    # plt.title('Real Space Power Spectrum')
-    # plt.savefig('real-space_power_spectrum_60deg_1000nm.png')
-    # plt.clf() 
+    # Plots FFT of reconstructed image
+    fft_of_reconstructed_img = np.fft.fftshift(np.abs(np.fft.fft2(tilt_im))**2)
+    fft_of_reconstructed_img = (fft_of_reconstructed_img - fft_of_reconstructed_img.mean()) / (fft_of_reconstructed_img.std())
+    print(fft_of_reconstructed_img)
+    plt.imshow(fft_of_reconstructed_img, cmap='gray')
+    plt.title('FFT of Reconstructed Image')
+    plt.colorbar()
+    plt.savefig('fft_of_reconstructed_img.png', dpi = 800)
+    plt.clf()
 
+    ########
+    # Find the DC component 
+    center = tuple(np.array(fft_of_reconstructed_img.shape) // 2)
 
-    
+    # Change the DC component to a desired value
+    desired_dc_value = 0.1
+    fft_of_reconstructed_img[center] = desired_dc_value
+
+    # Save or plot the modified reconstructed image
+    plt.imshow(fft_of_reconstructed_img, cmap='gray')
+    plt.colorbar()
+    plt.title("Modified Image with Custom DC Component")
+    plt.savefig("fft_of_reconstructed_img_modified.png", dpi=800)
+    plt.clf()
+
+    ########
+
     # Normalize the amplitude array
     amplitude_normalized = (amp - np.min(amp)) / (np.max(amp) - np.min(amp))
     # Plotting amplitude
-    print('Plotting normalized amplitude...')
-    plt.imshow(amplitude_normalized, cmap='gray') 
+    print('Plotting amplitude...')
+    plt.imshow(amp, cmap='gray') 
     plt.colorbar()
     plt.gca().invert_yaxis()
-    plt.title('Normalized Amplitude')
-    plt.savefig('amplitude_60deg_1000nm.png')
+    plt.title('Amplitude')
+    plt.savefig('amplitude.png', dpi = 800)
     plt.clf() 
 
     # Plotting phase (degrees)
     print('Plotting phase (degrees)...')
     phase_degrees = np.rad2deg(phs)
     plt.imshow(phase_degrees, cmap='hsv') 
-    plt.colorbar()
+    plt.colorbar(label = 'degrees')
     plt.gca().invert_yaxis()
     plt.title('Phase (degrees)')
-    plt.savefig('phase_60deg_1000nm.png')
+    plt.savefig('phase_TCIF.png', dpi = 800)
     plt.clf() 
 
-    # # Intensity = amplitude^2
-    # intensity = amp ** 2
-    # intensity_normalized = (intensity - np.min(intensity)) / (np.max(intensity) - np.min(intensity))
-    # # Plotting normalized intensity
-    # print('Plotting normalized intensities...')
-    # plt.imshow(intensity_normalized, cmap='gray') 
-    # plt.colorbar()
-    # plt.gca().invert_yaxis()
-    # plt.title('Power Spectrum (Normalized Intensity)')
-    # plt.savefig('intensity_0deg_1000nm.png')
-    # plt.clf() 
+
+    # Examining phase distribution - phase wrapping doesn't seem to be an issue
+    plt.hist(phs.flatten(), bins=100, color='green', alpha=0.7)
+    plt.xlabel("Phase values (radians)")
+    plt.ylabel("Frequency")
+    plt.title("Phase Histogram")
+    plt.savefig('phase_hist.png', dpi = 800)
+    plt.clf()
+
+
+    # Intensity = amplitude^2
+    intensity = amp ** 2
+    intensity_normalized = (intensity - np.min(intensity)) / (np.max(intensity) - np.min(intensity))
+    # Plotting normalized intensity
+    print('Plotting normalized intensities...')
+    plt.imshow(intensity_normalized, cmap='gray') 
+    plt.colorbar()
+    plt.gca().invert_yaxis()
+    plt.title('Normalized Intensity')
+    plt.savefig('intensity.png', dpi = 800)
+    plt.clf() 
 
     # Power spectrum for amplitudes
     dB = (-10 * np.log(amp)) + 10e-6
+   
     # Plotting dB
     print('Plotting dB...')
     plt.imshow(dB, cmap='gray') 
     plt.colorbar()
     plt.gca().invert_yaxis()
     plt.title('Power Spectrum (dB)')
-    plt.savefig('power_spectrum_60deg_1000nm.png')
+    plt.savefig('power_spectrum.png', dpi = 800)
     plt.clf()
+
+    # dB = (-20 * np.log(intensity)) + 10e-6
+    # plt.imshow(dB, cmap='gray') 
+    # plt.colorbar()
+    # plt.gca().invert_yaxis()
+    # plt.title('Power Spectrum (dB)')
+    # plt.savefig('power_spectrum.png')
+    # plt.clf() 
 
     # Perform radial averaging of amplitudes
     radial_avg_amp = radial_average(amplitude_normalized)
@@ -517,30 +562,55 @@ if __name__ == '__main__':
     plt.xlabel('Spatial Frequency (nm$^{-1}$)')
     plt.ylabel('Radially Averaged Amplitude')
     plt.title('Radially Averaged Amplitude vs. Spatial Frequency (nm$^{-1}$)')
-    plt.savefig('radial_avg_amplitude_60deg_1000nm.png', dpi=800)
+    plt.savefig('radial_avg_amplitude.png', dpi=800)
     plt.clf()
     
 
-    # Compute Fourier transform of the original sample
+    # Plotting phase of raw object prior to TCIF applied 
     original_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
-    # Calculate absolute phase difference
+    # original_phase = np.rad2deg(original_phase)
+    plt.imshow(original_phase, cmap= 'hsv')
+    plt.colorbar(label = 'radians')
+    plt.gca().invert_yaxis()
+    plt.title('Object Phase (radians)')
+    plt.savefig('original_phase.png', dpi = 800)
+    plt.clf()
+
+    # Calculate absolute phase difference between TCIF object and raw object
     phase_difference = np.abs(phs - original_phase)
-    
-    # Snap phase difference to 0 or π 
-    # phase_difference = np.where(np.isclose(phase_difference, np.pi, atol=1e-6), np.pi, 0)
+    # phase_difference = (phs - original_phase)
+    # Plotting absolute phase difference
+    plt.imshow(phase_difference, cmap='hsv', extent=(-nyquist_frequency, nyquist_frequency, -nyquist_frequency, nyquist_frequency))
+    plt.colorbar(label='radians')
+    plt.xlabel('Spatial Frequency (Horizontal, nm$^{-1}$)')
+    plt.ylabel('Spatial Frequency (Vertical, nm$^{-1}$)')
+    plt.title('Phase Difference in Fourier Space')
+    plt.savefig('phase_difference_heatmap.png', dpi=800)
+    plt.clf()
 
     # Perform radial averaging on the phase difference array
     radial_avg_phase_diff = radial_average(phase_difference)
     # Generate corresponding radial spatial frequencies
     spatial_frequencies = np.linspace(0, nyquist_frequency, len(radial_avg_phase_diff))
-
     # Plot the radially averaged phase difference
     print('Plotting radially averaged phase difference...')
     plt.plot(spatial_frequencies, radial_avg_phase_diff, color='black')
     plt.xlabel('Spatial Frequency (nm$^{-1}$)')
     plt.ylabel('Radially Averaged Phase Difference')
     plt.title('Radially Averaged Phase Difference vs. Spatial Frequency')
-    plt.savefig('radial_avg_phase_difference_60deg_1000nm.png', dpi=800)
+    plt.savefig('radial_avg_phase_difference.png', dpi = 800)
+    plt.clf()
+
+
+    # Perform radial averaging on the phase difference array
+    cos_phs = np.cos(radial_avg_phase_diff)
+    # Plot the radially averaged phase difference
+    print('Plotting radially averaged phase difference...')
+    plt.plot(spatial_frequencies, cos_phs, color='black')
+    plt.xlabel('Spatial Frequency (nm$^{-1}$)')
+    plt.ylabel('Radially Averaged Phase Difference')
+    plt.title('Radially Averaged Phase Difference vs. Spatial Frequency')
+    plt.savefig('cos_radial_avg_phase_difference.png', dpi = 800)
     plt.clf()
 
 
@@ -560,17 +630,9 @@ if __name__ == '__main__':
     # plt.xlabel('Spatial Frequency (nm$^{-1}$)')
     # plt.ylabel('Absolute Phase Difference')
     # plt.title('Absolute Phase Difference vs. Positive Spatial Frequency (nm$^{-1}$)')
-    # plt.savefig('phase_diff_0deg_1000nm.png', dpi=800)
+    # plt.savefig('test.png', dpi=800)
     # plt.clf()
 
-    # Plotting absolute phase difference
-    plt.imshow(phase_difference, cmap='hsv', extent=(-nyquist_frequency, nyquist_frequency, -nyquist_frequency, nyquist_frequency))
-    plt.colorbar(label='Phase Difference (radians)')
-    plt.xlabel('Spatial Frequency (Horizontal, nm$^{-1}$)')
-    plt.ylabel('Spatial Frequency (Vertical, nm$^{-1}$)')
-    plt.title('Phase Difference in Fourier Space')
-    plt.savefig('phase_difference_heatmap.png', dpi=800)
-    plt.clf()
 
     # # Plotting the CTF
     # ctf_plot = -2 * np.sin(w0)
