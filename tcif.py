@@ -15,6 +15,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import time
 from projection_of_3d_to_2d import generate_2d_projection
+from amorphous_carbon_film import * 
+from weak_phase import *
 
 
 def wvlength_pm(kvolt: int) -> float:
@@ -156,12 +158,17 @@ def calculate_spatial_frequencies(imge_size: int, pxel_size_nm: float):
     """
     # Frequency step
     f_spacing = 1. / (imge_size * pxel_size_nm)
+    print('f_spacing', f_spacing)
+    print('pixel_size_', pxel_size_nm)
 
     # Frequencies in nm^-1
-    freqs = np.fft.fftfreq(imge_size, d=f_spacing)
+    # freqs = np.fft.fftfreq(imge_size, d=f_spacing)
+    # freqs = np.fft.fftfreq(imge_size, d=pxel_size_nm) # fix?????
+    freqs = np.linspace(-2.5, 2.5, 256)
 
     # Shift frequencies to center the zero frequency
-    freqs = np.fft.fftshift(freqs)
+    # freqs = np.fft.fftshift(freqs)
+    print(freqs)
 
     return freqs
 
@@ -251,8 +258,7 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
     freqs = calculate_spatial_frequencies(imge_size, pxel_size_nm)
 
     # Shifted FFT of the specimen exit wave
-    f_spec = np.fft.fftshift(np.fft.fft2(spec)) # Numpy FFT
-    # f_spec = np.fft.fftshift(dft2d_matrix(spec)) # DFT
+    f_spec = np.fft.fftshift(np.fft.fft2(spec)) 
     
     # Create meshgrid for frequency coordinates
     ki, kj = np.meshgrid(freqs, freqs, indexing='ij')
@@ -262,10 +268,12 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
 
     # Calculate pnx_inm, pny_inm, ppx_inm, ppy_inm for all pixels at once
     factor = 0.5 * wvlength_pm * math.tan(alpha_rad) * 1e-3
+
     pnx_inm = ki - factor * math.cos(beta_rad) * ssqu
     pny_inm = kj - factor * math.sin(beta_rad) * ssqu
     ppx_inm = ki + factor * math.cos(beta_rad) * ssqu
     ppy_inm = kj + factor * math.sin(beta_rad) * ssqu
+
 
     # Interpolate for the real and imaginary parts of f_spec
     interpr = sp.interpolate.RegularGridInterpolator((freqs, freqs), f_spec.real, method='cubic', bounds_error=False, fill_value=0.0)
@@ -276,7 +284,7 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
     sp_ipn = interpi(np.stack((pnx_inm, pny_inm), axis=-1))
     sp_rpp = interpr(np.stack((ppx_inm, ppy_inm), axis=-1))
     sp_ipp = interpi(np.stack((ppx_inm, ppy_inm), axis=-1))
-
+    
     # Apply phase modulation
     phmod_cos = np.cos(W_0)
     phmod_sin = np.sin(W_0)
@@ -291,11 +299,13 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
     Q3r = -(Q1i - Q2i)
     Q3i = (Q1r - Q2r)
 
+
     # Compute amplitude and phase in a vectorized manner
     amp = np.sqrt(Q3r**2 + Q3i**2)
     phs = np.arctan2(Q3i, Q3r)
+    # phs = np.arctan(Q3i / Q3r)
 
-    return amp, phs
+    return amp, phs, freqs
     
 
 # def tcif_transform(amp: np.ndarray, phs: np.ndarray) -> np.ndarray:
@@ -348,34 +358,6 @@ def radial_average(data: np.ndarray) -> np.ndarray:
 
     return binned_data
 
-#  DFT transformation matrix
-def dft_matrix(N: int) -> np.ndarray:
-    """Compute the DFT transformation matrix."""
-    n = np.arange(N)
-    k = n.reshape((N, 1))
-    W = np.exp(-2j * np.pi * k * n / N)
-    return W
-
-# 2D DFT 
-def dft2d_matrix(image: np.ndarray) -> np.ndarray:
-    """Compute the 2D Discrete Fourier Transform (DFT) using matrix multiplication."""
-    N, M = image.shape
-    W_N = dft_matrix(N)
-    W_M = dft_matrix(M)
-    
-    # Compute the DFT using matrix multiplication
-    return W_N @ image @ W_M
-
-# 2D IDFT
-def idft2d_matrix(f_transform: np.ndarray) -> np.ndarray:
-    """Compute the 2D Inverse Discrete Fourier Transform (IDFT) using matrix multiplication."""
-    N, M = f_transform.shape
-    W_N_inv = np.linalg.inv(dft_matrix(N))
-    W_M_inv = np.linalg.inv(dft_matrix(M))
-    
-    # Compute the IDFT using matrix multiplication
-    return W_N_inv @ f_transform @ W_M_inv
-
 
 
 if __name__ == '__main__':
@@ -391,43 +373,66 @@ if __name__ == '__main__':
     df1_nm = 2000.0
     df2_nm = 2000.0
     beta_rad = 0.0
-    alpha_rad = np.deg2rad(20.0)
+    alpha_rad = np.deg2rad(10.0)
 
     # Phase distortion function called
     w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
 
-    ########################## simulated test object ##########################################################################
+    ########################## random object  ##########################################################################
     # Setting seed for testing
     # np.random.seed(1387)
 
-    # # Generating test object
-    # print('Generating object...')
+    # Generating test object
+    print('Generating object...')
     # spec = np.random.rand(imge_size, imge_size)
-    ###########################################################################################################################
 
-    ########################## apoF projection ###############################################################################
+    ########################## amrophous carbon film  ##########################################################################
+    # # Amorphous carbon film simulation parameters:
+    # mean_density = 0.6   # depends on your pixel size, etc.
+    # # mean_density = (pxel_size_nm ** 2)
+    # delta_x_A = 0.2            # 0.2 A/pixel 
+    # total_thickness_nm = 10.0  # 10 nm film
+    # slice_thickness_nm = 1.0   # each slice is 1 nm
+    # n_slices = total_thickness_nm / slice_thickness_nm
+
+    # spec = simulate_amorphous_carbon_film(
+    #     imge_size, imge_size,
+    #     delta_x_A,
+    #     total_thickness_nm,
+    #     slice_thickness_nm,
+    #     mean_density,
+    #     carbon_scattering_factor)
+
+    ########################## weak-phase object  ##########################################################################
+    # print('Generating weak phase object...')
+    # spec = weak_phase_object(imge_size=imge_size)
+
+    ########################## ribosome/apoF projection #####################################################################
     # Parameters for the projection
-    # mrc_filename = '8tu7_4ang_apix2.mrc'  
-    mrc_filename = 'ribo_apix2_res4.mrc'
+    # mrc_filename = '8tu7_4ang_apix2.mrc' # apoF
+    
+    mrc_filename = 'ribo_apix2_res4.mrc' # ribosome
     angles = (0, 0, 0)  # Euler angles for projection
     print('Angles: ', angles)
     
     # Generating 2D projection
     print('Generating 2D projection...')
     spec = generate_2d_projection(mrc_filename, angles, axis = 0)
-    
+
+    #########################################################################################################################
     # Plotting 2D projection
-    plt.imshow(spec, cmap='gray')
+    # plt.imshow(np.abs(spec) ** 2, cmap='gray')
+    plt.imshow(spec, cmap = 'gray')
     plt.title('2D Projection')
+    # plt.title('Multislice')
     plt.colorbar()
     plt.savefig('projection.png', dpi = 800)
     plt.clf()
-  
 
-    ###########################################################################################################################
+    ########################################################################################################################
     # Calling TCIF
     print('Calling TCIF...')
-    amp, phs = tcif(spec, w0, beta_rad, alpha_rad, wvlength_pm(kvolt), imge_size, pxel_size_nm)
+    amp, phs, freqs = tcif(spec, w0, beta_rad, alpha_rad, wvlength_pm(kvolt), imge_size, pxel_size_nm)
 
 
     ##########
@@ -439,16 +444,14 @@ if __name__ == '__main__':
     plt.imshow(phs_unwrapped, cmap='hsv')
     plt.colorbar(label='Unwrapped Phase (radians)')
     plt.title('Unwrapped Phase Map')
-    plt.savefig('unwrapped_phs_map.png', dpi = 800)
+    plt.savefig('phase_unwrapped.png', dpi = 800)
     plt.clf()
     ##########
 
 
-
     # Image reconstruction
     print('Reconstructing image...')
-    tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs)))) # Numpy IFFT
-    # tilt_im = np.abs(idft2d_matrix(np.fft.ifftshift(amp * np.exp(1j * phs)))) # IDFT
+    tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs)))) 
 
     # Normalizes real - space image
     tilt_im_n = (tilt_im - tilt_im.mean()) / (tilt_im.std())
@@ -464,7 +467,6 @@ if __name__ == '__main__':
     # Plots FFT of reconstructed image
     fft_of_reconstructed_img = np.fft.fftshift(np.abs(np.fft.fft2(tilt_im))**2)
     fft_of_reconstructed_img = (fft_of_reconstructed_img - fft_of_reconstructed_img.mean()) / (fft_of_reconstructed_img.std())
-    print(fft_of_reconstructed_img)
     plt.imshow(fft_of_reconstructed_img, cmap='gray')
     plt.title('FFT of Reconstructed Image')
     plt.colorbar()
@@ -499,13 +501,12 @@ if __name__ == '__main__':
     plt.savefig('amplitude.png', dpi = 800)
     plt.clf() 
 
-    # Plotting phase (degrees)
-    print('Plotting phase (degrees)...')
-    phase_degrees = np.rad2deg(phs)
-    plt.imshow(phase_degrees, cmap='hsv') 
-    plt.colorbar(label = 'degrees')
+    # Plotting phase 
+    print('Plotting phase...')
+    plt.imshow(phs, cmap='hsv') 
+    plt.colorbar(label = 'radians')
     plt.gca().invert_yaxis()
-    plt.title('Phase (degrees)')
+    plt.title('Phase (radians)')
     plt.savefig('phase_TCIF.png', dpi = 800)
     plt.clf() 
 
@@ -567,72 +568,57 @@ if __name__ == '__main__':
     
 
     # Plotting phase of raw object prior to TCIF applied 
-    original_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
-    # original_phase = np.rad2deg(original_phase)
-    plt.imshow(original_phase, cmap= 'hsv')
+    raw_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
+    plt.imshow(raw_phase, cmap= 'hsv')
     plt.colorbar(label = 'radians')
     plt.gca().invert_yaxis()
-    plt.title('Object Phase (radians)')
-    plt.savefig('original_phase.png', dpi = 800)
+    plt.title('Raw Phase (radians)')
+    plt.savefig('phase_raw.png', dpi = 800)
     plt.clf()
 
     # Calculate absolute phase difference between TCIF object and raw object
-    phase_difference = np.abs(phs - original_phase)
-    # phase_difference = (phs - original_phase)
+    phase_difference = np.abs(phs - raw_phase)
     # Plotting absolute phase difference
     plt.imshow(phase_difference, cmap='hsv', extent=(-nyquist_frequency, nyquist_frequency, -nyquist_frequency, nyquist_frequency))
     plt.colorbar(label='radians')
     plt.xlabel('Spatial Frequency (Horizontal, nm$^{-1}$)')
     plt.ylabel('Spatial Frequency (Vertical, nm$^{-1}$)')
-    plt.title('Phase Difference in Fourier Space')
+    plt.title('Absolute Phase Difference in Fourier Space')
     plt.savefig('phase_difference_heatmap.png', dpi=800)
     plt.clf()
 
     # Perform radial averaging on the phase difference array
     radial_avg_phase_diff = radial_average(phase_difference)
+    # Compute average of radial average phase difference
+    avg_val = np.nanmean(radial_avg_phase_diff)
+    print(avg_val)
+    print((np.pi) / 2)
     # Generate corresponding radial spatial frequencies
     spatial_frequencies = np.linspace(0, nyquist_frequency, len(radial_avg_phase_diff))
+    # spatial_frequencies = np.linspace(0, np.max(freqs), len(radial_avg_amp))
+    
     # Plot the radially averaged phase difference
     print('Plotting radially averaged phase difference...')
     plt.plot(spatial_frequencies, radial_avg_phase_diff, color='black')
+    plt.axhline(y=avg_val, color='red', linestyle='--', label='Mean = {:.2f}'.format(avg_val))
     plt.xlabel('Spatial Frequency (nm$^{-1}$)')
     plt.ylabel('Radially Averaged Phase Difference')
     plt.title('Radially Averaged Phase Difference vs. Spatial Frequency')
+    plt.legend()
     plt.savefig('radial_avg_phase_difference.png', dpi = 800)
     plt.clf()
 
 
-    # Perform radial averaging on the phase difference array
-    cos_phs = np.cos(radial_avg_phase_diff)
-    # Plot the radially averaged phase difference
-    print('Plotting radially averaged phase difference...')
-    plt.plot(spatial_frequencies, cos_phs, color='black')
-    plt.xlabel('Spatial Frequency (nm$^{-1}$)')
-    plt.ylabel('Radially Averaged Phase Difference')
-    plt.title('Radially Averaged Phase Difference vs. Spatial Frequency')
-    plt.savefig('cos_radial_avg_phase_difference.png', dpi = 800)
-    plt.clf()
-
-
-
-    # # Extract the phase difference along the horizontal axis (center row)
-    # center_row = phase_difference[phase_difference.shape[0] // 2, :]
-    # # Compute the spatial frequencies corresponding to the horizontal axis
-    # spatial_frequencies = np.fft.fftshift(np.fft.fftfreq(phase_difference.shape[1], d=pxel_size_nm))
-    # # Keep only the positive spatial frequencies (right half of the center row)
-    # positive_frequencies_mask = spatial_frequencies >= 0
-    # positive_spatial_frequencies = spatial_frequencies[positive_frequencies_mask]
-    # positive_phase_difference = center_row[positive_frequencies_mask]
-
-    # # Plotting 1D absolute phase difference
-    # print('Plotting radial averaged phase difference...')
-    # plt.plot(positive_spatial_frequencies, positive_phase_difference, color='black')
+    # # Perform radial averaging on the phase difference array
+    # cos_phs = np.cos(radial_avg_phase_diff)
+    # # Plot the radially averaged phase difference
+    # print('Plotting radially averaged phase difference...')
+    # plt.plot(spatial_frequencies, cos_phs, color='black')
     # plt.xlabel('Spatial Frequency (nm$^{-1}$)')
-    # plt.ylabel('Absolute Phase Difference')
-    # plt.title('Absolute Phase Difference vs. Positive Spatial Frequency (nm$^{-1}$)')
-    # plt.savefig('test.png', dpi=800)
+    # plt.ylabel('cos(Radially Averaged Phase Difference)')
+    # plt.title('cos(Radially Averaged Phase Difference) vs. Spatial Frequency')
+    # plt.savefig('cos_radial_avg_phase_difference.png', dpi = 800)
     # plt.clf()
-
 
     # # Plotting the CTF
     # ctf_plot = -2 * np.sin(w0)
