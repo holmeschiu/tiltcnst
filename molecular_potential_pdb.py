@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import pdb_1 as pdb
-from pdb_1 import PDB
+import pdb_handler as pdb
+from pdb_handler import PDB
 import numpy as np
 from typing import Type
 import atomic_potential as ap
