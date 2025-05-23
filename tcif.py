@@ -12,6 +12,7 @@ from weak_phase import wk_phs_obj
 from plotting import *
 from electron_optics import *
 
+
 #===================Functions=================
 # Phase distortion function 
 def W_0(Cs_mm: float, wvlength_pm: float, df1_nm: float, df2_nm: float, beta_0_rad: float, imge_size: int, pxel_size_nm: float) -> np.ndarray:
@@ -173,52 +174,65 @@ if __name__ == '__main__':
 
     ########################## amorphous carbon film  ##########################################################################
     # Amorphous carbon film simulation parameters:
-    mean_density = 0.6   # depends on your pixel size, etc.
-    mean_density = (pxel_size_nm ** 2)
-    delta_x_A = 0.2            # 0.2 A/pixel 
-    total_thickness_nm = 10.0  # 10 nm film
-    slice_thickness_nm = 1.0   # each slice is 1 nm
-    n_slices = total_thickness_nm / slice_thickness_nm
+    # mean_density = 0.6   # depends on your pixel size, etc.
+    # mean_density = (pxel_size_nm ** 2)
+    # delta_x_A = 0.2            # 0.2 A/pixel 
+    # total_thickness_nm = 10.0  # 10 nm film
+    # slice_thickness_nm = 1.0   # each slice is 1 nm
+    # n_slices = total_thickness_nm / slice_thickness_nm
 
-    spec = simulate_amorphous_carbon_film(
-        imge_size, imge_size,
-        delta_x_A,
-        total_thickness_nm,
-        slice_thickness_nm,
-        mean_density,
-        carbon_scattering_factor)
+    # spec = simulate_amorphous_carbon_film(
+    #     imge_size, imge_size,
+    #     delta_x_A,
+    #     total_thickness_nm,
+    #     slice_thickness_nm,
+    #     mean_density,
+    #     carbon_scattering_factor)
 
 
     ########################## weak-phase object  ##########################################################################
-    print('Generating weak phase object...')
-    # spec = wk_phs_obj() 
-    spec = np.abs(spec) ** 2
+    # print('Generating weak phase object...')
+    # spec, *_ = wk_phs_obj() 
+
+    # # Plotting phase of raw object prior to TCIF applied 
+    # print('Plotting raw phase...')
+    # raw_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
+    # save_imshow(raw_phase, title='Raw Phase', filename='phase_raw.png', colorbar_label='radians', cmap='viridis')
 
 
     ########################## ribosome/apoF projection #####################################################################
-    # Parameters for the projection
+    # File for the projection
     # mrc_filename = '8tu7_4ang_apix2.mrc' # apoF
-    mrc_filename = 'ribo_apix2_res4.mrc' # ribosome
+    # mrc_filename = 'ribo_apix2_res4.mrc' # ribosome
     
+    # Angles for projection
     angles = (0, 0, 0)  # Euler angles for projection
     print('Angles: ', angles)
     
     # Generating 2D projection
     print('Generating 2D projection...')
-    # spec = gen_2d_proj(mrc_filename, angles, axis = 0)
-    # spec = add_cryo_em_noise(spec, electron_dose=50, detector_noise_std=0.02)
+    spec = gen_2d_proj(mrc_filename, angles, axis = 0)
 
+    # Plotting raw phase
+    raw_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
+    save_imshow(raw_phase, title='Raw Phase', filename='phase_raw.png', colorbar_label='radians', cmap='viridis')
+
+    # # Add noise?
+    # # spec = add_cryo_em_noise(spec, electron_dose=50, detector_noise_std=0.02)
+
+    # Plotting phase distribution 
+    plt.hist(raw_phase.flatten(), bins=100, color='#2E6F8E', alpha=0.7)
+    plt.xlabel('Phase Values (radians)')
+    plt.ylabel('Frequency')
+    plt.title('Raw Phase Histogram')
+    plt.savefig('phase_hist_raw.png', dpi = 800)
+    plt.clf()
 
     #########################################################################################################################  
     # Plotting 2D projection
-    # save_imshow(np.abs(spec)**2, title='2D Projection', filename='projection.png', cmap='gray', colorbar_label='')
-    save_imshow(spec, title='Amorphous Carbon Film', filename='projection.png', cmap='gray', colorbar_label='')
+    save_imshow(spec, title='2D Projection', filename='projection.png', cmap='gray', colorbar_label='')
+    # save_imshow(np.abs(spec) ** 2, title='Weak Phase Object', filename='projection.png', cmap='viridis', colorbar_label='')
  
-    # Plotting phase of raw object prior to TCIF applied 
-    print('Plotting raw phase...')
-    raw_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
-    save_imshow(raw_phase, title='Raw Phase', filename='phase_raw.png', colorbar_label='radians', cmap='hsv')
-
 
     ########################################################################################################################
     # Calling TCIF
@@ -254,7 +268,7 @@ if __name__ == '__main__':
     amplitude_normalized = (amp - np.min(amp)) / (np.max(amp) - np.min(amp))
     # Plotting amplitude after TCIF is applied
     print('Plotting amplitude...')
-    save_imshow(amp, title='Amplitude', filename='amplitude.png', cmap='gray',
+    save_imshow(amp, title='Amplitude', filename='amplitude.png', cmap='viridis',
                 extent=(-nyquist_frequency, nyquist_frequency, -nyquist_frequency, nyquist_frequency),
                 xlabel='Spatial Frequency (m$^{-1}$)', ylabel='Spatial Frequency (m$^{-1}$)', invert_yaxis=False)
 
@@ -263,7 +277,7 @@ if __name__ == '__main__':
     intensity_normalized = (intensity - np.min(intensity)) / (np.max(intensity) - np.min(intensity))
     # Plotting normalized intensity
     print('Plotting normalized intensities...')
-    save_imshow(intensity_normalized, title='Normalized Intensity', filename='intensity.png', cmap='gray',
+    save_imshow(intensity_normalized, title='Normalized Intensity', filename='intensity.png', cmap='viridis',
                 extent=(-nyquist_frequency, nyquist_frequency, -nyquist_frequency, nyquist_frequency),
                 xlabel='Spatial Frequency (m$^{-1}$)', ylabel='Spatial Frequency (m$^{-1}$)', invert_yaxis=False)
 
@@ -281,14 +295,14 @@ if __name__ == '__main__':
 
     # Plotting phase after TCIF is applied
     print('Plotting phase...')
-    save_imshow(phs, title='TCIF Afflicted Phase', filename='phase_TCIF.png', colorbar_label='radians', cmap='hsv')
+    save_imshow(phs, title='TCIF Afflicted Phase', filename='phase_TCIF.png', colorbar_label='radians', cmap='viridis')
 
     # Plotting phase distribution 
-    plt.hist(phs.flatten(), bins=100, color='green', alpha=0.7)
-    plt.xlabel('Phase values (radians)')
+    plt.hist(phs.flatten(), bins=100, color='#2E6F8E', alpha=0.7)
+    plt.xlabel('Phase Values (radians)')
     plt.ylabel('Frequency')
-    plt.title('Phase Histogram')
-    plt.savefig('phase_hist.png', dpi = 800)
+    plt.title('TCIF Phase Histogram')
+    plt.savefig('phase_hist_TCIF.png', dpi = 800)
     plt.clf()
 
 

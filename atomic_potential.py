@@ -5,7 +5,6 @@
 # Imports
 import numpy as np
 import sys
-import cmath
 from typing import List
 import math
 
@@ -93,6 +92,7 @@ def atom_potential(atom_number: int, box_size: int, pxel_size_nm: float,
 
     R = np.sqrt(X**2 + Y**2 + Z**2)
     R[R == 0] = 1e-12  # Avoid divide-by-zero
+
 
     # Term 1 - Exponential decay over distance eq C.19 in Kirkland
     t1 = (

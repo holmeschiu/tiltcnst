@@ -28,6 +28,7 @@ class PDB:
                     atom = Atom()
                     atom.serial = int(line[6:11])
                     atom.name = line[12:16].strip()
+                    atom.element = atom.name[0].upper()
                     atom.resname = line[17:20]
                     atom.chain = line[21]
                     atom.resseq = int(line[22:26])
@@ -75,6 +76,7 @@ class Atom:
     def __init__(self):
         self.serial = None
         self.name = None
+        self.element = None  
         self.resname = None
         self.chain = None
         self.resseq = None
