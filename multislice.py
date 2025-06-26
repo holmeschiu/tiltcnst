@@ -15,6 +15,7 @@ import os
 from matplotlib.colors import to_rgba
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import Patch
+import mrcfile
 
 
 # Function to simulate wave function 
@@ -59,10 +60,10 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
 
     # Calculate molecular potential
     mol_potential = mp.integrate_atomic_potential(protein, box_size, pxel_size_nm)
-    print("Molecular potential stats:")
-    print(f"  min: {np.min(mol_potential):.3e}")
-    print(f"  max: {np.max(mol_potential):.3e}")
-    print(f"  mean: {np.mean(mol_potential):.3e}")
+    # print("Molecular potential stats:")
+    # print(f"  min: {np.min(mol_potential):.3e}")
+    # print(f"  max: {np.max(mol_potential):.3e}")
+    # print(f"  mean: {np.mean(mol_potential):.3e}")
 
     # Scale potentials to prevent instability
     mol_potential *= 1e20
@@ -70,6 +71,14 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
     print(f"  min: {np.min(mol_potential):.3e}")
     print(f"  max: {np.max(mol_potential):.3e}")
     print(f"  mean: {np.mean(mol_potential):.3e}")
+
+    ###
+    # Save the molecular potential to a .mrc file
+    # with mrcfile.new('molecular_potential.mrc', overwrite=True) as mrc:
+    #     mrc.set_data(mol_potential.astype(np.float32))  # MRC requires float32
+    #     mrc.voxel_size = pxel_size_nm  # optional: set voxel size metadata
+    #     mrc.update_header_from_data()
+    ###
 
     # Histogram of the scaled molecular potential
     plt.figure(figsize=(6, 4))
@@ -90,71 +99,71 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
     top_coords = np.array(np.unravel_index(top_indices, mol_potential.shape)).T  
 
 
-    # === Print atoms near high potential voxels ===
-    # Convert voxel indices back to real-world coordinates (in Å)
-    voxel_size_ang = pxel_size_nm * 10  # nm → Å
-    search_radius = 2.0 # Å
+    # # === Print atoms near high potential voxels ===
+    # # Convert voxel indices back to real-world coordinates (in Å)
+    # voxel_size_ang = pxel_size_nm * 10  # nm → Å
+    # search_radius = 2.0 # Å
 
-    print("\n=== Atoms Near High Potential Voxels (within 2.0 Å) ===")
-    for idx, (vx, vy, vz) in enumerate(top_coords):
-        # Convert voxel center to Å using box origin shift
-        real_x = (vx - box_size // 2) * voxel_size_ang
-        real_y = (vy - box_size // 2) * voxel_size_ang
-        real_z = (vz - box_size // 2) * voxel_size_ang
+    # print("\n=== Atoms Near High Potential Voxels (within 2.0 Å) ===")
+    # for idx, (vx, vy, vz) in enumerate(top_coords):
+    #     # Convert voxel center to Å using box origin shift
+    #     real_x = (vx - box_size // 2) * voxel_size_ang
+    #     real_y = (vy - box_size // 2) * voxel_size_ang
+    #     real_z = (vz - box_size // 2) * voxel_size_ang
 
-        print(f"\nVoxel {idx}: ({real_x:.2f}, {real_y:.2f}, {real_z:.2f}) Å — Potential: {top_values[idx]:.2e}")
+    #     print(f"\nVoxel {idx}: ({real_x:.2f}, {real_y:.2f}, {real_z:.2f}) Å — Potential: {top_values[idx]:.2e}")
 
-        found = False
-        for atom in protein.atoms:
-            dx = atom.x - real_x
-            dy = atom.y - real_y
-            dz = atom.z - real_z
-            distance = np.sqrt(dx**2 + dy**2 + dz**2)
-            if distance <= search_radius:
-                print(f"  → {atom.element:2s} at ({atom.x:.2f}, {atom.y:.2f}, {atom.z:.2f}) Å — Distance: {distance:.2f} Å")
-                found = True
+    #     found = False
+    #     for atom in protein.atoms:
+    #         dx = atom.x - real_x
+    #         dy = atom.y - real_y
+    #         dz = atom.z - real_z
+    #         distance = np.sqrt(dx**2 + dy**2 + dz**2)
+    #         if distance <= search_radius:
+    #             print(f"  → {atom.element:2s} at ({atom.x:.2f}, {atom.y:.2f}, {atom.z:.2f}) Å — Distance: {distance:.2f} Å")
+    #             found = True
 
-        if not found:
-            print("  No atoms found within search radius.")
-
-
-    # Extract atomic coordinates (Å) and convert to voxel indices 
-    voxel_size_ang = pxel_size_nm * 10
-    atom_x = np.array([atom.x for atom in protein.atoms])
-    atom_y = np.array([atom.y for atom in protein.atoms])
-    atom_z = np.array([atom.z for atom in protein.atoms])
-
-    atom_vox_x = (atom_x / voxel_size_ang + box_size // 2).astype(int)
-    atom_vox_y = (atom_y / voxel_size_ang + box_size // 2).astype(int)
-    atom_vox_z = (atom_z / voxel_size_ang + box_size // 2).astype(int)
+    #     if not found:
+    #         print("  No atoms found within search radius.")
 
 
-    # 3D plotting 
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    # # Extract atomic coordinates (Å) and convert to voxel indices 
+    # voxel_size_ang = pxel_size_nm * 10
+    # atom_x = np.array([atom.x for atom in protein.atoms])
+    # atom_y = np.array([atom.y for atom in protein.atoms])
+    # atom_z = np.array([atom.z for atom in protein.atoms])
 
-    # Plot atoms 
-    ax.scatter(atom_vox_x, atom_vox_y, atom_vox_z, c='gray', s=5, alpha=0.4)
-
-    # Plot top 10 potential voxels
-    x, y, z = top_coords[:, 0], top_coords[:, 1], top_coords[:, 2]
-    sc = ax.scatter(x, y, z, c=top_values, cmap='inferno', s=80, edgecolors='black', label='Top Potentials')
-
-    # Plot details
-    ax.set_xlabel('X (voxels)')
-    ax.set_ylabel('Y (voxels)')
-    ax.set_zlabel('Z (voxels)')
-    ax.set_title('Molecular Potential Outliers and Atomic Structure')
-    plt.colorbar(sc, label='Potential Value')
-    # plt.show()
-    plt.savefig('outliers.png', dpi=800)
-    plt.clf()
+    # atom_vox_x = (atom_x / voxel_size_ang + box_size // 2).astype(int)
+    # atom_vox_y = (atom_y / voxel_size_ang + box_size // 2).astype(int)
+    # atom_vox_z = (atom_z / voxel_size_ang + box_size // 2).astype(int)
 
 
+    # # 3D plotting 
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
 
-    # Create output directory for slice plots
-    grouped_output_dir = "grouped_mol_potential_slices"
-    os.makedirs(grouped_output_dir, exist_ok=True)
+    # # Plot atoms 
+    # ax.scatter(atom_vox_x, atom_vox_y, atom_vox_z, c='gray', s=5, alpha=0.04)
+
+    # # Plot top 10 potential voxels
+    # x, y, z = top_coords[:, 0], top_coords[:, 1], top_coords[:, 2]
+    # sc = ax.scatter(x, y, z, c=top_values, cmap='inferno', s=80, edgecolors='black', label='Top Potentials')
+
+    # # Plot details
+    # ax.set_xlabel('X (voxels)')
+    # ax.set_ylabel('Y (voxels)')
+    # ax.set_zlabel('Z (voxels)')
+    # ax.set_title('Molecular Potential Outliers and Atomic Structure')
+    # plt.colorbar(sc, label='Potential Value')
+    # # plt.show()
+    # plt.savefig('outliers.png', dpi=800)
+    # plt.clf()
+
+
+
+    # # Create output directory for slice plots
+    # grouped_output_dir = "grouped_mol_potential_slices"
+    # os.makedirs(grouped_output_dir, exist_ok=True)
 
     # Vectorized Fresnel propagator initialization
     box_center = box_size / 2
@@ -173,6 +182,10 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
 
     # Process each slice
     for slc in range(total_slice_number):
+        
+        # Monitor progress every 10 slices
+        if (slc + 1) % 10 == 0 or slc == 0 or slc == total_slice_number - 1:
+            print(f"Processing slice {slc+1}/{total_slice_number}")
         
         # Calculate slice start
         slce_start = slc * slce_zpixels
@@ -194,14 +207,14 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
         # Collapses the 3D z-stack into a 2D map for simulation/plotting
         v_nz = np.sum(v_n, axis=2)
 
-        # Plotting each slice        
-        save_imshow(
-            data=v_nz,
-            title=f'Grouped Molecular Potential Slice {slc} ({slce_start}:{slce_end})',
-            filename=os.path.join(grouped_output_dir, f'grouped_slice_{slc:02d}.png'),
-            cmap='magma',
-            colorbar_label='Summed Potential (V)',
-            invert_yaxis=False)
+        # # Plotting each slice        
+        # save_imshow(
+        #     data=v_nz,
+        #     title=f'Grouped Molecular Potential Slice {slc} ({slce_start}:{slce_end})',
+        #     filename=os.path.join(grouped_output_dir, f'grouped_slice_{slc:02d}.png'),
+        #     cmap='magma',
+        #     colorbar_label='Summed Potential (V)',
+        #     invert_yaxis=False)
 
         # Transmission function
         tr_n = np.cos(sigma_val * v_nz)
@@ -237,9 +250,9 @@ if __name__ == '__main__':
     start_time = time.time()
     
     # Parameters for wave function simulation
-    pdb_file = '1yiw.pdb'
-    box_size = 100
-    pxel_size_nm = 0.3 # 0.28
+    pdb_file = '1dat_assembly.pdb'
+    box_size = 200
+    pxel_size_nm = 0.2 # 0.28
     trgt_slice_nm = 0.3
     kvolt = 200.0
 
@@ -297,7 +310,7 @@ if __name__ == '__main__':
     # Plotting TCIF afflicted phase (Fourier space)
     save_imshow(
         data=phs,
-        title='Apoferritin Multislice TCIF Afflicted Phase',
+        title='Multislice TCIF Afflicted Phase',
         filename='msphs.png',
         cmap='viridis',
         colorbar_label='Radians',

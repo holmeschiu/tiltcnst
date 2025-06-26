@@ -39,7 +39,13 @@ def radial_average(data: np.ndarray) -> np.ndarray:
         
         # Get the data in the current radial bin +/- a small buffer
         mask = (distances_flat >= i - 0.1) & (distances_flat < i + 0.1)
-        binned_data[i] = np.mean(data_flat[mask])
+        
+        # Ensures values are within bins
+        if np.any(mask):
+            binned_data[i] = np.mean(data_flat[mask])
+        # Fill empty bins with nan
+        else:
+            binned_data[i] = np.nan  # or 0?
 
     return binned_data
 
@@ -47,10 +53,10 @@ def radial_average(data: np.ndarray) -> np.ndarray:
 # Function for plotting 2D data
 def save_imshow(data: np.ndarray, title: str, xlabel: str = '', ylabel: str = '', 
                 filename: str = '', cmap: str = 'gray', colorbar_label: str = '',
-                invert_yaxis: bool = True, extent=None):
+                invert_yaxis: bool = True, extent=None, vmin=None, vmax=None):
     """
     Display and save a 2D image with consistent formatting.
-    
+
     Args:
         data (np.ndarray): 2D array to plot.
         title (str): Plot title.
@@ -59,8 +65,10 @@ def save_imshow(data: np.ndarray, title: str, xlabel: str = '', ylabel: str = ''
         colorbar_label (str): Label for the colorbar.
         invert_yaxis (bool): Whether to invert the y-axis.
         extent (list or tuple): Extent for imshow (e.g., used in Fourier space).
+        vmin (float): Minimum value for color scaling.
+        vmax (float): Maximum value for color scaling.
     """
-    plt.imshow(data, cmap=cmap, extent=extent)
+    plt.imshow(data, cmap=cmap, extent=extent, vmin=vmin, vmax=vmax)
     cb = plt.colorbar()
     if colorbar_label:
         cb.set_label(colorbar_label)
@@ -71,6 +79,7 @@ def save_imshow(data: np.ndarray, title: str, xlabel: str = '', ylabel: str = ''
         plt.gca().invert_yaxis()
     plt.savefig(filename, dpi=800)
     plt.clf()
+
 
 
 # Function for line plots

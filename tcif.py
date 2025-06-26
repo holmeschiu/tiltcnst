@@ -203,7 +203,7 @@ if __name__ == '__main__':
     ########################## ribosome/apoF projection #####################################################################
     # File for the projection
     # mrc_filename = '8tu7_4ang_apix2.mrc' # apoF
-    # mrc_filename = 'ribo_apix2_res4.mrc' # ribosome
+    mrc_filename = 'ribo_apix2_res4.mrc' # ribosome
     
     # Angles for projection
     angles = (0, 0, 0)  # Euler angles for projection
@@ -232,7 +232,7 @@ if __name__ == '__main__':
     # Plotting 2D projection
     save_imshow(spec, title='2D Projection', filename='projection.png', cmap='gray', colorbar_label='')
     # save_imshow(np.abs(spec) ** 2, title='Weak Phase Object', filename='projection.png', cmap='viridis', colorbar_label='')
- 
+
 
     ########################################################################################################################
     # Calling TCIF
