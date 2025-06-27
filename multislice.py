@@ -175,10 +175,12 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
     propagator_i = c1 * np.cos(prop_phs)
 
     # Initialize the incident wave function
-    psi_r = np.ones((box_size, box_size))
-    psi_i = np.zeros((box_size, box_size))
+    psi_r = np.ones((box_size, box_size), dtype=np.float32)
+    psi_i = np.zeros((box_size, box_size), dtype=np.float32)
 
-    exit_waves = np.zeros((total_slice_number, box_size, box_size), dtype=np.complex64)
+    # exit_waves = np.zeros((total_slice_number, box_size, box_size), dtype=np.complex64)
+    # Directly accumulate the sum of exit waves
+    summed_exit_wave = np.zeros((box_size, box_size), dtype=np.complex64)
 
     # Process each slice
     for slc in range(total_slice_number):
@@ -233,14 +235,17 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
 
         # FFT for Fresnel propagation
         psi_n1 = np.fft.ifft2(np.fft.fft2(prpg_n) * np.fft.fft2(trns_n))
-        
-        # Updating exit wave
-        exit_waves[slc] = psi_n1
+
+        # Accumulate exit wave in-place
+        summed_exit_wave += psi_n1.astype(np.complex64)
         
         # Separating real & imaginary
-        psi_r, psi_i = psi_n1.real, psi_n1.imag
+        psi_r = psi_n1.real.astype(np.float32)
+        psi_i = psi_n1.imag.astype(np.float32)
 
-    return psi_r, psi_i, exit_waves
+    return psi_r, psi_i, summed_exit_wave
+
+
 
 
 # Test
@@ -250,15 +255,15 @@ if __name__ == '__main__':
     start_time = time.time()
     
     # Parameters for wave function simulation
-    pdb_file = '1dat_assembly.pdb'
-    box_size = 200
+    pdb_file = '1dat.pdb'
+    box_size = 100
     pxel_size_nm = 0.2 # 0.28
     trgt_slice_nm = 0.3
     kvolt = 200.0
 
     # Calling multislice 
     print('Calling multislice function...')
-    psi_r, psi_i, exit_waves = simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvolt)
+    psi_r, psi_i, summed_exit_wave = simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvolt)
 
     # Parameters for TCIF 
     imge_size = box_size 
@@ -268,10 +273,6 @@ if __name__ == '__main__':
     alpha_rad = np.deg2rad(0.0)
     beta_rad = 0 # tilt axis is the x-axis
     
-    # Combined wave
-    # psi_complex = psi_r + 1j * psi_i
-    summed_exit_wave = np.sum(exit_waves, axis=0)
-
 
     # Plotting exit wave amplitude (real space)
     save_imshow(
