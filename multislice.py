@@ -80,23 +80,23 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
     #     mrc.update_header_from_data()
     ###
 
-    # Histogram of the scaled molecular potential
-    plt.figure(figsize=(6, 4))
-    plt.hist(mol_potential.flatten(), bins=200)
-    plt.title("Histogram of Scaled Molecular Potential")
-    plt.xlabel("Potential (V)")
-    plt.ylabel("Voxel count")
-    plt.yscale("log")  # Use log scale to see the tails
-    plt.tight_layout()
-    plt.savefig('mol_potential_histogram.png', dpi=800)
-    plt.clf()
+    # # Histogram of the scaled molecular potential
+    # plt.figure(figsize=(6, 4))
+    # plt.hist(mol_potential.flatten(), bins=200)
+    # plt.title("Histogram of Scaled Molecular Potential")
+    # plt.xlabel("Potential (V)")
+    # plt.ylabel("Voxel count")
+    # plt.yscale("log")  # Use log scale to see the tails
+    # plt.tight_layout()
+    # plt.savefig('mol_potential_histogram.png', dpi=300)
+    # plt.close()
 
   
-    # Flatten potential and find top 10 potential values 
-    flat_potential = mol_potential.flatten()
-    top_indices = np.argpartition(flat_potential, -10)[-10:]
-    top_values = flat_potential[top_indices]
-    top_coords = np.array(np.unravel_index(top_indices, mol_potential.shape)).T  
+    # # Flatten potential and find top 10 potential values 
+    # flat_potential = mol_potential.flatten()
+    # top_indices = np.argpartition(flat_potential, -10)[-10:]
+    # top_values = flat_potential[top_indices]
+    # top_coords = np.array(np.unravel_index(top_indices, mol_potential.shape)).T  
 
 
     # # === Print atoms near high potential voxels ===
@@ -157,7 +157,7 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
     # plt.colorbar(sc, label='Potential Value')
     # # plt.show()
     # plt.savefig('outliers.png', dpi=800)
-    # plt.clf()
+    # plt.close()
 
 
 
@@ -243,7 +243,7 @@ def simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvol
         psi_r = psi_n1.real.astype(np.float32)
         psi_i = psi_n1.imag.astype(np.float32)
 
-    return psi_r, psi_i, summed_exit_wave
+    return psi_r, psi_i, summed_exit_wave, mol_potential
 
 
 
@@ -263,7 +263,7 @@ if __name__ == '__main__':
 
     # Calling multislice 
     print('Calling multislice function...')
-    psi_r, psi_i, summed_exit_wave = simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvolt)
+    psi_r, psi_i, summed_exit_wave, mol_potential = simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvolt)
 
     # Parameters for TCIF 
     imge_size = box_size 

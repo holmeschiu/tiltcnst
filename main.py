@@ -29,21 +29,14 @@ for angle_deg in tilt_angles_deg:
     print(f"\n=== Simulating tilt angle: {angle_deg}° ===")
     alpha_rad = np.deg2rad(angle_deg)
 
+    # Make custom directory to store files
     tilt_dir = os.path.join(output_root, f"tilt_{angle_deg:02d}deg")
     os.makedirs(tilt_dir, exist_ok=True)
 
     # Run multislice simulation
-    psi_r, psi_i, exit_waves = simulate_wave_function(
-        pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvolt
-    )
-    summed_exit_wave = np.sum(exit_waves, axis=0)
+    psi_r, psi_i, summed_exit_wave, mol_potential = simulate_wave_function(pdb_file, box_size, pxel_size_nm, trgt_slice_nm, kvolt)
 
-    # === Plot potential histogram ===
-    protein = mp.pdb.PDB(pdb_file)
-    protein.read_pdb(quiet=True)
-    mol_potential = mp.integrate_atomic_potential(protein, box_size, pxel_size_nm)
-    mol_potential *= 1e20
-
+    # Plot molecular potential histogram
     plt.figure(figsize=(6, 4))
     plt.hist(mol_potential.flatten(), bins=200)
     plt.title(f"Molecular Potential Histogram — Tilt {angle_deg}°")
@@ -51,8 +44,8 @@ for angle_deg in tilt_angles_deg:
     plt.ylabel("Voxel count")
     plt.yscale("log")
     plt.tight_layout()
-    plt.savefig(os.path.join(tilt_dir, f'ms_mol_potential_histogram.png'), dpi=800)
-    plt.clf()
+    plt.savefig(os.path.join(tilt_dir, f'ms_mol_potential_histogram.png'), dpi=300)
+    plt.close()
 
     # Save exit wave amplitude (real space)
     save_imshow(
@@ -142,6 +135,8 @@ for angle_deg in tilt_angles_deg:
                 ylabel='Radially Averaged Phase Difference (rad)',
                 title=f'Radial Avg Phase Difference — Tilt {angle_deg}°')
 
-
+    # Closes all figures to save memory
+    plt.close('all')
+    
     elapsed = time.time() - start_time
     print(f"Done — Tilt {angle_deg}°, Time: {elapsed:.1f} sec")

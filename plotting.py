@@ -77,8 +77,8 @@ def save_imshow(data: np.ndarray, title: str, xlabel: str = '', ylabel: str = ''
     plt.ylabel(ylabel)
     if invert_yaxis:
         plt.gca().invert_yaxis()
-    plt.savefig(filename, dpi=800)
-    plt.clf()
+    plt.savefig(filename, dpi=300)
+    plt.close()
 
 
 
@@ -108,5 +108,5 @@ def save_lineplot(x, y, title: str, xlabel: str, ylabel: str,
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
-    plt.savefig(filename, dpi=800)
-    plt.clf()
+    plt.savefig(filename, dpi=300)
+    plt.close()
