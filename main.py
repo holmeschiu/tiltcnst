@@ -8,8 +8,8 @@ from electron_optics import wvlength_pm, sigma
 from multislice import simulate_wave_function, mp  
 
 # Simulation parameters
-pdb_file = '1dat.pdb'
-box_size = 80
+pdb_file = '/Users/kiradevore/Documents/python_scripts/TCIF/250402_opt_of_250111/pdb_files/apoF/1dat.pdb'
+box_size = 140 #256
 pxel_size_nm = 0.2
 trgt_slice_nm = 0.3
 kvolt = 200.0
@@ -21,7 +21,7 @@ beta_rad = 0  # x-axis tilt
 output_root = 'simulation_outputs'
 os.makedirs(output_root, exist_ok=True)
 
-tilt_angles_deg = [0, 10, 20, 30, 60]  
+tilt_angles_deg = [0]  
 
 # Loop through tilt angles
 for angle_deg in tilt_angles_deg:
@@ -47,7 +47,7 @@ for angle_deg in tilt_angles_deg:
     plt.savefig(os.path.join(tilt_dir, f'ms_mol_potential_histogram.png'), dpi=300)
     plt.close()
 
-    # Save exit wave amplitude (real space)
+    # Save exit wave amplitude (real space) 
     save_imshow(
         data=np.abs(summed_exit_wave),
         title=f'Amplitude (Real Space) — Tilt {angle_deg}°',
@@ -105,8 +105,21 @@ for angle_deg in tilt_angles_deg:
         vmax=np.pi
     )
 
-    # Save phase difference
+    # Save unwrapped phase difference
     phase_diff = np.abs(phs - ex_wv_phs_f)
+    # Diagnostic lines
+    center = box_size // 2
+    print("Fourier phase at center (exit wave):", ex_wv_phs_f[center, center])
+    print("Fourier phase at center (TCIF):", phs[center, center])
+    print("Phase difference center:", phase_diff[center, center])
+
+    # Calculates wrapped [-pi, +pi] difference
+    phase_diff_wrapped = np.angle(np.exp(1j * (phs - ex_wv_phs_f)))  
+    phase_diff_wrapped_abs = np.abs(phase_diff_wrapped)
+    print("Wrapped center diff:", phase_diff_wrapped[box_size // 2, box_size // 2])
+
+
+    # Plot unwrapped absolute phase difference
     save_imshow(
         data=phase_diff,
         title=f'Phase Difference — Tilt {angle_deg}°',
@@ -117,6 +130,39 @@ for angle_deg in tilt_angles_deg:
         vmax=np.pi
     )
 
+        # Plot wrapped absolute phase difference
+    save_imshow(
+        data=phase_diff_wrapped_abs,
+        title=f'Wrapped Absolute Phase Difference — Tilt {angle_deg}°',
+        filename=os.path.join(tilt_dir, f'wrapped_phase_diff.png'),
+        cmap='viridis',
+        colorbar_label='Radians',
+        vmin=-np.pi,
+        vmax=np.pi
+    )
+
+    # Radial average of wrapped phase difference
+    rad_phs_diff_wrapped = radial_average(phase_diff_wrapped_abs)
+    spatial_frequencies_phs = np.linspace(0, nyquist_frequency, len(rad_phs_diff_wrapped))
+    save_lineplot(spatial_frequencies_phs, rad_phs_diff_wrapped,
+                filename=os.path.join(tilt_dir, f'tcif_radial_avg_phase_diff_wrapped.png'),
+                xlabel='Spatial Frequency (m$^{-1}$)',
+                ylabel='Radially Averaged Wrapped Phase Difference (rad)',
+                title=f'Radially Avg Wrapped Phase Difference — Tilt {angle_deg}°')
+
+
+    # Plot and save histogram of unwrapped phase differences
+    # plt.figure(figsize=(6, 4))
+    # plt.hist(phase_diff.flatten(), bins=100, color='black')
+    # plt.title(f"Histogram of Phase Difference — Tilt {angle_deg}°")
+    # plt.xlabel("Phase Difference (radians)")
+    # plt.ylabel("Voxel Count")
+    # plt.yscale("log")
+    # plt.tight_layout()
+    # plt.savefig(os.path.join(tilt_dir, f'tcif_phase_diff_histogram.png'), dpi=300)
+    # plt.clf()
+
+
     # Radial average of amplitude
     rad_amp = radial_average((amp - np.min(amp)) / (np.max(amp) - np.min(amp)))
     spatial_frequencies_amp = np.linspace(0, nyquist_frequency, len(rad_amp))
@@ -126,7 +172,7 @@ for angle_deg in tilt_angles_deg:
                 ylabel='Radially Averaged Amplitude',
                 title=f'Radial Avg Amplitude — Tilt {angle_deg}°')
 
-    # Radial average of phase difference
+    # Radial average of unwrapped phase difference
     rad_phs_diff = radial_average(phase_diff)
     spatial_frequencies_phs = np.linspace(0, nyquist_frequency, len(rad_phs_diff))
     save_lineplot(spatial_frequencies_phs, rad_phs_diff,

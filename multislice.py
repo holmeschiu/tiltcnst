@@ -255,7 +255,7 @@ if __name__ == '__main__':
     start_time = time.time()
     
     # Parameters for wave function simulation
-    pdb_file = '1dat.pdb'
+    pdb_file = '/Users/kiradevore/Documents/python_scripts/TCIF/250402_opt_of_250111/pdb_files/apoF/1dat_assembly.pdb'
     box_size = 100
     pxel_size_nm = 0.2 # 0.28
     trgt_slice_nm = 0.3
@@ -273,6 +273,16 @@ if __name__ == '__main__':
     alpha_rad = np.deg2rad(0.0)
     beta_rad = 0 # tilt axis is the x-axis
     
+    # Plot molecular potential histogram
+    plt.figure(figsize=(6, 4))
+    plt.hist(mol_potential.flatten(), bins=200)
+    plt.title(f"Molecular Potential Histogram ")
+    plt.xlabel("Potential (V)")
+    plt.ylabel("Voxel count")
+    plt.yscale("log")
+    plt.tight_layout()
+    plt.savefig('mol_potential_histogram.png', dpi=300)
+    plt.close()
 
     # Plotting exit wave amplitude (real space)
     save_imshow(
