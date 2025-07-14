@@ -152,6 +152,31 @@ def tcif(spec: np.ndarray, W_0: np.ndarray, beta_rad: float, alpha_rad: float, w
 
     return amp, phs, freqs, nyquist_frequency
 
+def add_poisson_noise(image, mean_electrons_per_px=10):
+    """
+    Apply Poisson noise to simulate electron counting statistics.
+
+    Parameters:
+        image (np.ndarray): Real-space image (non-negative intensities).
+        mean_electrons_per_px (float): Approx. average counts per pixel.
+
+    Returns:
+        np.ndarray: Noisy image.
+    """
+    # Normalize to [0, 1]
+    image = image - np.min(image)
+    image = image / np.max(image)
+
+    # Scale to electron counts
+    electron_counts = image * mean_electrons_per_px
+
+    # Poisson sample
+    noisy_counts = np.random.poisson(electron_counts)
+
+    # Rescale back to [0, 1]
+    noisy_image = noisy_counts / mean_electrons_per_px
+    return noisy_image
+
 
 #===================Main usage=================
 if __name__ == '__main__':
@@ -203,7 +228,7 @@ if __name__ == '__main__':
     ########################## ribosome/apoF projection #####################################################################
     # File for the projection
     # mrc_filename = '8tu7_4ang_apix2.mrc' # apoF
-    mrc_filename = 'ribo_apix2_res4.mrc' # ribosome
+    mrc_filename = '/Users/kiradevore/Documents/python_scripts/TCIF/250402_opt_of_250111/ribo_3D_maps/ribo_apix2_res4.mrc' # ribosome
     
     # Angles for projection
     angles = (0, 0, 0)  # Euler angles for projection
@@ -216,9 +241,6 @@ if __name__ == '__main__':
     # Plotting raw phase
     raw_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
     save_imshow(raw_phase, title='Raw Phase', filename='phase_raw.png', colorbar_label='radians', cmap='viridis')
-
-    # # Add noise?
-    # # spec = add_cryo_em_noise(spec, electron_dose=50, detector_noise_std=0.02)
 
     # Plotting phase distribution 
     plt.hist(raw_phase.flatten(), bins=100, color='#2E6F8E', alpha=0.7)
@@ -250,17 +272,32 @@ if __name__ == '__main__':
     # Image reconstruction
     print('Reconstructing image...')
     tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs)))) 
-   
+    
     # Normalizes real - space image
     tilt_im_n = (tilt_im - tilt_im.mean()) / (tilt_im.std())
-   
+    
     # Plots real space image
-    save_imshow(tilt_im_n, title='Real Space Image After TCIF', filename='tilted_img_FFT.png', cmap='gray')
+    save_imshow(tilt_im_n, title='Normalized Real Space Image After TCIF', 
+                filename='tilted_img_FFT.png', cmap='gray')
+   
 
-    # Plots FFT of reconstructed image
-    fft_of_reconstructed_img = np.fft.fftshift(np.abs(np.fft.fft2(tilt_im))**2)
-    fft_of_reconstructed_img = (fft_of_reconstructed_img - fft_of_reconstructed_img.mean()) / (fft_of_reconstructed_img.std())
-    save_imshow(fft_of_reconstructed_img, title='FFT of Reconstructed Image', filename='fft_of_reconstructed_img.png', cmap='gray')
+    # Add Poisson noise (simulate detector shot noise)
+    print('Adding Poisson noise...')
+    tilt_im_noisy = add_poisson_noise(tilt_im, mean_electrons_per_px=10)
+    
+    # Normalize noisy image
+    tilt_im_noisy_n = (tilt_im_noisy - tilt_im_noisy.mean()) / tilt_im_noisy.std()
+    
+    # Plots real space noisy image
+    save_imshow(tilt_im_noisy_n, title='Normalized Real Space Image After TCIF w/ Poisson Noise', 
+                filename='tilted_img_nFFT.png', cmap='gray')
+
+
+
+    # # Plots FFT of reconstructed image
+    # fft_of_reconstructed_img = np.fft.fftshift(np.abs(np.fft.fft2(tilt_im))**2)
+    # fft_of_reconstructed_img = (fft_of_reconstructed_img - fft_of_reconstructed_img.mean()) / (fft_of_reconstructed_img.std())
+    # save_imshow(fft_of_reconstructed_img, title='FFT of Reconstructed Image', filename='fft_of_reconstructed_img.png', cmap='gray')
 
 
     ########################################################################################################################
@@ -296,6 +333,15 @@ if __name__ == '__main__':
     # Plotting phase after TCIF is applied
     print('Plotting phase...')
     save_imshow(phs, title='TCIF Afflicted Phase', filename='phase_TCIF.png', colorbar_label='radians', cmap='viridis')
+
+
+    # Phase unwrapping
+    from skimage.restoration import unwrap_phase
+
+    phs_unwrapped = unwrap_phase(phs)
+    save_imshow(phs_unwrapped, title='Unwrapped Phase Map', filename='NEW_phase_unwrapped.png', colorbar_label='radians', cmap='twilight')
+
+
 
     # Plotting phase distribution 
     plt.hist(phs.flatten(), bins=100, color='#2E6F8E', alpha=0.7)

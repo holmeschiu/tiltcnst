@@ -73,7 +73,7 @@ def integrate_atomic_potential_parallel(pdb: Type[PDB], box_size: int, pxel_size
 
 
 def main():
-    pro = PDB("1dat.pdb")
+    pro = PDB("1df8_assembly.pdb")
     pro.read_pdb()
 
 

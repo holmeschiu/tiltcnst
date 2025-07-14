@@ -8,8 +8,8 @@ from electron_optics import wvlength_pm, sigma
 from multislice import simulate_wave_function, mp  
 
 # Simulation parameters
-pdb_file = '/Users/kiradevore/Documents/python_scripts/TCIF/250402_opt_of_250111/pdb_files/apoF/1dat.pdb'
-box_size = 140 #256
+pdb_file = '/Users/kiradevore/Documents/python_scripts/TCIF/250402_opt_of_250111/pdb_files/ribo/6xu7.pdb'
+box_size = 256
 pxel_size_nm = 0.2
 trgt_slice_nm = 0.3
 kvolt = 200.0
@@ -21,7 +21,7 @@ beta_rad = 0  # x-axis tilt
 output_root = 'simulation_outputs'
 os.makedirs(output_root, exist_ok=True)
 
-tilt_angles_deg = [0]  
+tilt_angles_deg = [20, 30, 60]  
 
 # Loop through tilt angles
 for angle_deg in tilt_angles_deg:
