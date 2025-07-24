@@ -2,13 +2,12 @@
 # Computes molecular potential
 
 import pdb_handler as pdb
-from pdb_handler import PDB
 import numpy as np
 from typing import Type
 import atomic_potential as ap
 from joblib import Parallel, delayed
 
-def integrate_atomic_potential(pdb: Type[PDB], box_size: int, pxel_size_nm: float) -> np.ndarray:
+def integrate_atomic_potential(pdb: Type[pdb.PDB], box_size: int, pxel_size_nm: float) -> np.ndarray:
     """
     Computes the full molecular Coulomb potential of all atoms in the protein.
 
@@ -42,7 +41,7 @@ def integrate_atomic_potential(pdb: Type[PDB], box_size: int, pxel_size_nm: floa
     return V_grid
 
 
-def integrate_atomic_potential_parallel(pdb: Type[PDB], box_size: int, pxel_size_nm: float, n_jobs: int = -1) -> np.ndarray:
+def integrate_atomic_potential_parallel(pdb: Type[pdb.PDB], box_size: int, pxel_size_nm: float, n_jobs: int = -1) -> np.ndarray:
     """
     Computes the full molecular Coulomb potential in PARALLEL.
 
@@ -73,8 +72,10 @@ def integrate_atomic_potential_parallel(pdb: Type[PDB], box_size: int, pxel_size
 
 
 def main():
-    pro = PDB("1df8_assembly.pdb")
+    pro = pdb.PDB("/Users/kiradevore/Documents/python_scripts/TCIF/250402_opt_of_250111/pdb_files/apoF/1dat.pdb")
     pro.read_pdb()
+    pro.orient_thickest_to_z()
+    pro.write_pdb_as("aligned_structure.pdb")
 
 
 if __name__ == '__main__':

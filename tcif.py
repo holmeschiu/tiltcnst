@@ -178,6 +178,43 @@ def add_poisson_noise(image, mean_electrons_per_px=10):
     return noisy_image
 
 
+# Generate 2D Gaussian Random Field (GRF) for ice simulation
+def generate_grf_amorphous_ice(shape, px_size_A, a1=0.199, s1=0.731, a2=0.801, s2=0.081, m=1/2.88):
+    ny, nx = shape
+    qx = np.fft.fftfreq(nx, d=px_size_A)
+    qy = np.fft.fftfreq(ny, d=px_size_A)
+    qx, qy = np.meshgrid(qx, qy, indexing='ij')
+    q = np.sqrt(qx**2 + qy**2)
+
+    # Paper’s two-Gaussian power spectrum
+    power_spectrum = a1 * np.exp(-q**2 / (2 * s1**2)) + a2 * np.exp(-(q - m)**2 / (2 * s2**2))
+
+    # Apply random phase
+    rand_phases = np.exp(2j * np.pi * np.random.rand(*q.shape))
+
+    # Fourier field with randomized phase and shaped power spectrum
+    fourier_field = np.sqrt(power_spectrum) * rand_phases
+
+    # Inverse FFT to get real-space GRF
+    grf = np.fft.ifft2(np.fft.ifftshift(fourier_field)).real
+
+    # Normalize to zero mean, unit variance
+    grf -= np.mean(grf)
+    grf /= np.std(grf)
+
+    return grf
+
+# Physically scale GRF to match LDA ice contrast
+def scale_grf(grf, N_water_per_A2=0.033):
+    kappa = 7.014e-3  # 2πħ² / me*e
+    f_O = 0.213  # Scattering factor for O
+    f_H = 0.025  # Scattering factor for H
+    V0 = N_water_per_A2 * (f_O + 2*f_H) / kappa
+    sigma2 = 10195.82 * N_water_per_A2
+    return grf * np.sqrt(sigma2) + V0
+
+
+
 #===================Main usage=================
 if __name__ == '__main__':
     
@@ -194,12 +231,9 @@ if __name__ == '__main__':
     beta_rad = 0.0
     alpha_rad = np.deg2rad(0.0)
 
-    # Phase distortion called
-    w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
-
     ########################## amorphous carbon film  ##########################################################################
     # Amorphous carbon film simulation parameters:
-    # mean_density = 0.6   # depends on your pixel size, etc.
+    # mean_density = 0.6   # depends on pixel size, etc.
     # mean_density = (pxel_size_nm ** 2)
     # delta_x_A = 0.2            # 0.2 A/pixel 
     # total_thickness_nm = 10.0  # 10 nm film
@@ -219,6 +253,9 @@ if __name__ == '__main__':
     # print('Generating weak phase object...')
     # spec, *_ = wk_phs_obj() 
 
+    # Plotting Weak Phase Object
+    # save_imshow(np.abs(spec) ** 2, title='Weak Phase Object', filename='projection.png', cmap='viridis', colorbar_label='')
+
     # # Plotting phase of raw object prior to TCIF applied 
     # print('Plotting raw phase...')
     # raw_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
@@ -228,15 +265,22 @@ if __name__ == '__main__':
     ########################## ribosome/apoF projection #####################################################################
     # File for the projection
     # mrc_filename = '8tu7_4ang_apix2.mrc' # apoF
-    mrc_filename = '/Users/kiradevore/Documents/python_scripts/TCIF/250402_opt_of_250111/ribo_3D_maps/ribo_apix2_res4.mrc' # ribosome
+    mrc_filename = '/Users/kiradevore/Documents/python_scripts/TCIF/250402_opt_of_250111/ribo_3D_maps/ribo_apix2_res4_box256.mrc' # ribosome
     
-    # Angles for projection
-    angles = (0, 0, 0)  # Euler angles for projection
+    # Euler angles for projection
+    angles = (0, 0, 0) 
     print('Angles: ', angles)
     
     # Generating 2D projection
     print('Generating 2D projection...')
     spec = gen_2d_proj(mrc_filename, angles, axis = 0)
+    
+    # Plotting 2D projection
+    save_imshow(spec, title='2D Projection', filename='projection.png', cmap='gray', colorbar_label='Intensity')
+
+    ###### Fix background
+     
+    ######
 
     # Plotting raw phase
     raw_phase = np.angle(np.fft.fftshift(np.fft.fft2(spec)))
@@ -250,54 +294,62 @@ if __name__ == '__main__':
     plt.savefig('phase_hist_raw.png', dpi = 800)
     plt.clf()
 
-    #########################################################################################################################  
-    # Plotting 2D projection
-    save_imshow(spec, title='2D Projection', filename='projection.png', cmap='gray', colorbar_label='')
-    # save_imshow(np.abs(spec) ** 2, title='Weak Phase Object', filename='projection.png', cmap='viridis', colorbar_label='')
-
-
     ########################################################################################################################
     # Calling TCIF
     print('Calling TCIF...')
+    w0 = W_0(Cs_mm, wvlength_pm(kvolt), df1_nm, df2_nm, beta_rad, imge_size, pxel_size_nm)
     amp, phs, freqs, nyquist_frequency = tcif(spec, w0, beta_rad, alpha_rad, wvlength_pm(kvolt), imge_size, pxel_size_nm)
 
-    # Plotting the CTF
-    ctf = -2 * np.sin(w0)
-    save_imshow(ctf, cmap='gray', title='CTF', filename='CTF.png',
-                extent=(-nyquist_frequency, nyquist_frequency, -nyquist_frequency, nyquist_frequency),
-                xlabel='Spatial Frequency (m$^{-1}$)', ylabel='Spatial Frequency (m$^{-1}$)', colorbar_label='radians', invert_yaxis=False)
+    # # Plotting the CTF
+    # ctf = -2 * np.sin(w0)
+    # save_imshow(ctf, cmap='gray', title='CTF', filename='CTF.png',
+    #             extent=(-nyquist_frequency, nyquist_frequency, -nyquist_frequency, nyquist_frequency),
+    #             xlabel='Spatial Frequency (m$^{-1}$)', ylabel='Spatial Frequency (m$^{-1}$)', colorbar_label='radians', invert_yaxis=False)
 
 
     ########################################################################################################################
     # Image reconstruction
     print('Reconstructing image...')
-    tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs)))) 
-    
-    # Normalizes real - space image
-    tilt_im_n = (tilt_im - tilt_im.mean()) / (tilt_im.std())
-    
-    # Plots real space image
-    save_imshow(tilt_im_n, title='Normalized Real Space Image After TCIF', 
-                filename='tilted_img_FFT.png', cmap='gray')
-   
-
-    # Add Poisson noise (simulate detector shot noise)
-    print('Adding Poisson noise...')
-    tilt_im_noisy = add_poisson_noise(tilt_im, mean_electrons_per_px=10)
-    
-    # Normalize noisy image
-    tilt_im_noisy_n = (tilt_im_noisy - tilt_im_noisy.mean()) / tilt_im_noisy.std()
-    
-    # Plots real space noisy image
-    save_imshow(tilt_im_noisy_n, title='Normalized Real Space Image After TCIF w/ Poisson Noise', 
-                filename='tilted_img_nFFT.png', cmap='gray')
+    # tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs)))) 
+    # save_imshow(tilt_im, title='Real Space Image After TCIF', 
+    #             filename='reconstructed_img.png', cmap='gray')
 
 
+    # Reconstructing image (real space)
+    tilt_im = np.abs(np.fft.ifft2(np.fft.ifftshift(amp * np.exp(1j * phs))))
 
-    # # Plots FFT of reconstructed image
-    # fft_of_reconstructed_img = np.fft.fftshift(np.abs(np.fft.fft2(tilt_im))**2)
-    # fft_of_reconstructed_img = (fft_of_reconstructed_img - fft_of_reconstructed_img.mean()) / (fft_of_reconstructed_img.std())
-    # save_imshow(fft_of_reconstructed_img, title='FFT of Reconstructed Image', filename='fft_of_reconstructed_img.png', cmap='gray')
+    # Add GRF-based ice background (simulate amorphous ice)
+    grf = generate_grf_amorphous_ice(tilt_im.shape, pxel_size_nm * 10)  # convert nm → Å
+    grf_scaled = scale_grf(grf, N_water_per_A2=0.033)
+
+    # Normalize GRF to match amplitude range
+    grf_scaled = grf_scaled - np.min(grf_scaled)
+    grf_scaled = grf_scaled / np.max(grf_scaled)
+    grf_scaled *= np.percentile(tilt_im, 95)  # avoid dominating signal
+
+    # Combine signal + background
+    tilt_im += grf_scaled
+
+    # Save pre-noise image (optional)
+    save_imshow(tilt_im, title='Image + Ice Background', filename='reconstructed_img_ice.png', cmap='gray')
+
+
+    # Add Poisson noise (simulate detector shot noise) 
+    tilt_im = add_poisson_noise(tilt_im)
+
+
+       
+    # Plots noisy real space image
+    save_imshow(tilt_im, title='Real Space Image After TCIF w/ Poisson Noise', 
+                filename='reconstructed_img_noise.png', cmap='gray')
+    
+
+
+
+
+
+
+
 
 
     ########################################################################################################################
@@ -334,16 +386,7 @@ if __name__ == '__main__':
     print('Plotting phase...')
     save_imshow(phs, title='TCIF Afflicted Phase', filename='phase_TCIF.png', colorbar_label='radians', cmap='viridis')
 
-
-    # Phase unwrapping
-    from skimage.restoration import unwrap_phase
-
-    phs_unwrapped = unwrap_phase(phs)
-    save_imshow(phs_unwrapped, title='Unwrapped Phase Map', filename='NEW_phase_unwrapped.png', colorbar_label='radians', cmap='twilight')
-
-
-
-    # Plotting phase distribution 
+    # Plotting phase distribution post - TCIF
     plt.hist(phs.flatten(), bins=100, color='#2E6F8E', alpha=0.7)
     plt.xlabel('Phase Values (radians)')
     plt.ylabel('Frequency')
@@ -351,10 +394,15 @@ if __name__ == '__main__':
     plt.savefig('phase_hist_TCIF.png', dpi = 800)
     plt.clf()
 
+    ##################################################### Phase Unwrapping Effects ############################################################
+    # # Phase unwrapping
+    # from skimage.restoration import unwrap_phase
 
-    ########################################################################################################################
-    # Plotting radial averaged amplitude 
-    print('Plotting radial averaged amplitude...')
+    # phs_unwrapped = unwrap_phase(phs)
+    # save_imshow(phs_unwrapped, title='Unwrapped Phase Map', filename='NEW_phase_unwrapped.png', colorbar_label='radians', cmap='twilight')
+
+    ##################################################### Radial Averages ###################################################################
+    print('Plotting radial averages...')
     # Perform radial averaging of amplitudes
     radial_avg_amp = radial_average(amplitude_normalized)
     # Map radial distances to spatial frequencies 
@@ -378,16 +426,12 @@ if __name__ == '__main__':
     # Compute average of radial average phase difference
     avg_val = np.nanmean(radial_avg_phase_diff)  
     # Plot the radially averaged phase difference
-    print('Plotting radially averaged phase difference...')
-    # save_lineplot(spatial_frequencies, radial_avg_phase_diff, title='Radially Averaged Phase Difference vs. Spatial Frequency',
-    #               xlabel='Spatial Frequency (m$^{-1}$)', ylabel='Radians', linecolor='black',
-    #                hline=[avg_val, 'red'], legend='Mean = {:.2f}'.format(avg_val), filename='radial_avg_phase_difference.png')
-    
     save_lineplot(spatial_frequencies, radial_avg_phase_diff, title='Radially Averaged Phase Difference vs. Spatial Frequency',
                 xlabel='Spatial Frequency (m$^{-1}$)', ylabel='Radians', linecolor='black',
                 filename='radial_avg_phase_difference.png')
 
-    
+    ##########################################################################################################################################
+   
     # End time
     end_time = time.time()
 
